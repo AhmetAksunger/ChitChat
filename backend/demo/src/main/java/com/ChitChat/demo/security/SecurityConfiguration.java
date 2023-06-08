@@ -49,4 +49,9 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public TokenFilter tokenFilter(){
+        return new TokenFilter();
+    }
 }

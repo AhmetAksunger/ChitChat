@@ -2,7 +2,6 @@ package com.ChitChat.demo;
 
 import com.ChitChat.demo.business.abstracts.UserService;
 import com.ChitChat.demo.dto.requests.UserRegisterRequest;
-import com.ChitChat.demo.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

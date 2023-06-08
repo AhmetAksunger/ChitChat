@@ -11,5 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @NoArgsConstructor
 public class AuthResponse {
 
-    private User user;
+    private String token;
+    private UserVM user;
 }

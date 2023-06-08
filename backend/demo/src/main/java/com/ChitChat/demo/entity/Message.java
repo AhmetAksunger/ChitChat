@@ -1,7 +1,6 @@
 package com.ChitChat.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.ChitChat.demo.dto.responses.UserVM;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
-    private String senderName;
-    private String receiverName;
+    private UserVM sender;
+    private UserVM receiver;
     private String message;
     private Status status;
 }

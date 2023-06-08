@@ -4,10 +4,11 @@ import SockJS from 'sockjs-client';
 
 var stompClient = null;
 
-const ChatRoom = () => {
+const ChatRoom = (props) => {
     
+    const {username} = props.authState.user;
+
     const [userData,setUserData] = useState({
-        username: "",
         receiverName: "",
         connected: false,
         message: ""
@@ -16,14 +17,6 @@ const ChatRoom = () => {
     const [publicMessages,setPublicMessages] = useState([])
     
     const [privateMessages, setPrivateMessages] = useState(new Map());
-
-    const handleUsername = (event) => {
-        const username = event.target.value;
-        setUserData({
-            ...userData,
-            username: username
-        })
-    };
 
     const handleMessage = (event) => {
         const message = event.target.value;
@@ -46,13 +39,13 @@ const ChatRoom = () => {
         });
         
         stompClient.subscribe("/chatroom/public",onPublicMessageReceived);
-        stompClient.subscribe(`/user/${userData.username}/private`,onPrivateMessageReceived);
+        stompClient.subscribe(`/user/${username}/private`,onPrivateMessageReceived);
         userJoin();
     };
 
     const userJoin = () => {
         let chatMessage = {
-            senderName: userData.username,
+            sender: {username: username},
             status: "JOIN"
         };
 
@@ -94,7 +87,7 @@ const ChatRoom = () => {
     const sendPublicMessage = () => {
         if(stompClient){
             let chatMessage = {
-                senderName: userData.username,
+                sender: {username:username},
                 message: userData.message,
                 status: "MESSAGE"
             };
@@ -112,12 +105,16 @@ const ChatRoom = () => {
                     <li>Chatrooms</li>
                     {[...privateMessages.keys()].map((name,index) => {
                         return (
+
                             <li className="list-group-item" key={index}>{name}</li>
                         );
                     })}
-                    {publicMessages.map((message,index) => {
+                    {publicMessages.map((data,index) => {
                         return(
-                            <li key={index} className="list-group-item">{message.message}</li>
+                            <>
+                            <label>{data.sender.username}</label>
+                            <li key={index} className="list-group-item">{data.message}</li>
+                            </>
                         );
                     })}
                 </ul>
@@ -130,7 +127,6 @@ const ChatRoom = () => {
             :
         
             <div>
-                <input type='text' placeholder='Enter username' onChange={handleUsername}/>
                 <button className='btn btn-primary' onClick={registerUser}>Register</button>
             </div>
         
