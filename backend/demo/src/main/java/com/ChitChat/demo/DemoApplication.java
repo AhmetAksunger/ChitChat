@@ -25,10 +25,12 @@ public class DemoApplication {
 
 			@Override
 			public void run(String... args) throws Exception {
-				UserRegisterRequest registerRequest = new UserRegisterRequest();
-				registerRequest.setUsername("user1");
-				registerRequest.setPassword("test");
-				userService.save(registerRequest);
+				for (int i = 1; i<=10; i++){
+					UserRegisterRequest registerRequest = new UserRegisterRequest();
+					registerRequest.setUsername("user" + i);
+					registerRequest.setPassword("test");
+					userService.save(registerRequest);
+				}
 			}
 		};
 	}

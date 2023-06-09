@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { login } from '../api/ApiCalls';
 import { loginSuccess } from '../redux/authActions';
+import { useHistory, withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 const Login = (props) => {
@@ -20,6 +21,7 @@ const Login = (props) => {
                 user: response.data.user
             }
             props.onLoginSuccess(authState);
+            props.history.push("/chatroom")
         } catch (error) {
             console.log(error);
         }
@@ -40,4 +42,4 @@ const Login = (props) => {
     );
 };
 
-export default Login;
+export default withRouter(Login);

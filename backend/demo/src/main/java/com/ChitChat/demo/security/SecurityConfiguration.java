@@ -32,6 +32,9 @@ public class SecurityConfiguration {
             }
         });
 
+        http.headers().frameOptions().disable();
+
+
         http
                 .csrf().disable()
                 .cors().and()

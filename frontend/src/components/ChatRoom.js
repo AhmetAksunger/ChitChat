@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
+import ChatBox from './ChatBox';
+import { getUsers } from '../api/ApiCalls';
+import UserList from './UserList';
 
 var stompClient = null;
 
@@ -14,9 +17,11 @@ const ChatRoom = (props) => {
         message: ""
     });
 
-    const [publicMessages,setPublicMessages] = useState([])
+    const [publicMessages,setPublicMessages] = useState([]);
     
     const [privateMessages, setPrivateMessages] = useState(new Map());
+    
+    const [window,setWindow] = useState("PUBLIC");
 
     const handleMessage = (event) => {
         const message = event.target.value;
@@ -32,6 +37,10 @@ const ChatRoom = (props) => {
         stompClient.connect({},onConnected,onError);
     };
 
+    useEffect(()=>{
+        registerUser();
+    },[]);
+
     const onConnected = () => {
         setUserData({
             ...userData,
@@ -45,7 +54,7 @@ const ChatRoom = (props) => {
 
     const userJoin = () => {
         let chatMessage = {
-            sender: {username: username},
+            senderName: username,
             status: "JOIN"
         };
 
@@ -53,12 +62,12 @@ const ChatRoom = (props) => {
     }
 
     const onPublicMessageReceived = (payload) => {
-        console.log("in");
         let payloadData = JSON.parse(payload.body);
         switch (payloadData.status) {
             case "JOIN":
-                if(privateMessages.get(payloadData.senderName === null)){
+                if(!privateMessages.has(payloadData.senderName)){
                     privateMessages.set(payloadData.senderName,[]);
+                    setPrivateMessages(new Map(privateMessages));
                 }
                 break;
             case "MESSAGE":
@@ -87,7 +96,7 @@ const ChatRoom = (props) => {
     const sendPublicMessage = () => {
         if(stompClient){
             let chatMessage = {
-                sender: {username:username},
+                senderName: username,
                 message: userData.message,
                 status: "MESSAGE"
             };
@@ -97,42 +106,67 @@ const ChatRoom = (props) => {
         }
     }
 
+    const sendPrivateMessage=()=>{
+        if (stompClient) {
+          var chatMessage = {
+            senderName: username,
+            receiverName:window,
+            message: userData.message,
+            status:"MESSAGE"
+          };
+
+            privateMessages.get(window).push(chatMessage);
+            setPrivateMessages(new Map(privateMessages));
+            stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
+            setUserData({...userData,"message": ""});
+        }
+    }
+
+    
+    const onClickUser = (clickedUsername) => {
+        setWindow(clickedUsername);
+    }
+
+    const addOfflineUser = (username) => {
+        privateMessages.set(username,[]);
+        setPrivateMessages(new Map(privateMessages));
+    }
+
     return (
         <div className='container'>
-            {userData.connected ? 
-            <div>
-                <ul className="list-group">
-                    <li>Chatrooms</li>
-                    {[...privateMessages.keys()].map((name,index) => {
-                        return (
-
-                            <li className="list-group-item" key={index}>{name}</li>
-                        );
-                    })}
-                    {publicMessages.map((data,index) => {
-                        return(
-                            <>
-                            <label>{data.sender.username}</label>
-                            <li key={index} className="list-group-item">{data.message}</li>
-                            </>
-                        );
-                    })}
-                </ul>
-
-                <div>
-                    <input type='text' placeholder='Send Public Message' onChange={handleMessage}/>
-                    <button className='btn btn-secondary' onClick={sendPublicMessage}>Send</button>
+        {userData.connected && (
+            <div className='row'>
+                <div className='col-md-3'>
+                    <div className="list-group">
+                        <span className="list-group-item list-group-item-action active" aria-current="true">
+                            <div className="d-flex w-100 justify-content-between">
+                            <h5 className="mb-1">Public Chat</h5>
+                            </div>
+                            <p className="mb-1">This channel is for general discussions and public messages.</p>
+                        </span>
+                    </div>
+                </div>
+                <div className='col-md-6'>
+                    <div>
+                        <ChatBox window={window} privateMessages={privateMessages} publicMessages={publicMessages} addOfflineUser={addOfflineUser}/>
+                        <div>
+                            <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px'}}/>
+                            <span class="material-symbols-outlined" onClick={window==="PUBLIC" ? sendPublicMessage : sendPrivateMessage} style={{cursor: 'pointer'}}>
+                            send
+                            </span>    
+                        </div>
+                    </div>
+                </div>
+                <div className='col-md-3'>
+                    <ul class="list-group">
+                        <li class="list-group-item active" aria-current="true">All Users</li>
+                        <UserList onClickUser={onClickUser}/>
+                    </ul>
                 </div>
             </div>
-            :
-        
-            <div>
-                <button className='btn btn-primary' onClick={registerUser}>Register</button>
-            </div>
-        
-        
-            }
+        )}
         </div>
+
     );
 };
 

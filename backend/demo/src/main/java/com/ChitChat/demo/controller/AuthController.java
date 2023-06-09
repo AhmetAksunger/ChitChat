@@ -21,9 +21,4 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(credentialsRequest));
     }
 
-    @GetMapping("/api/v1/sayhi")
-    public String sayHi(@CurrentUser User user){
-        return user.getPassword() + " " + user.getUsername();
-    }
-
 }
