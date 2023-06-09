@@ -17,10 +17,6 @@ const ChatRoom = (props) => {
         message: ""
     });
 
-    const [publicMessages,setPublicMessages] = useState([]);
-    
-    const [privateMessages, setPrivateMessages] = useState(new Map());
-    
     const [window,setWindow] = useState("PUBLIC");
 
     const handleMessage = (event) => {
@@ -63,30 +59,12 @@ const ChatRoom = (props) => {
 
     const onPublicMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        switch (payloadData.status) {
-            case "JOIN":
-                if(!privateMessages.has(payloadData.senderName)){
-                    privateMessages.set(payloadData.senderName,[]);
-                    setPrivateMessages(new Map(privateMessages));
-                }
-                break;
-            case "MESSAGE":
-                setPublicMessages((prevPublicMessages) => [...prevPublicMessages, payloadData]);
-                break;
-        }
+
     };
 
     const onPrivateMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        if(privateMessages.get(payloadData.senderName) !== null){
-            privateMessages.get(payloadData.senderName).push(payloadData);
-            setPrivateMessages(new Map(privateMessages));
-        }else{
-            let list = [];
-            list.push(payloadData);
-            privateMessages.set(payloadData.senderName,list);
-            setPrivateMessages(new Map(privateMessages));
-        }
+
     }
 
     const onError = (error) => {
@@ -127,10 +105,6 @@ const ChatRoom = (props) => {
         setWindow(clickedUsername);
     }
 
-    const addOfflineUser = (username) => {
-        privateMessages.set(username,[]);
-        setPrivateMessages(new Map(privateMessages));
-    }
 
     return (
         <div className='container'>

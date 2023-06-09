@@ -1,0 +1,6 @@
+2023-06-09 04:45:50 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]MESSAGES"; expected "MERGE"; SQL statement:
+MESSAGES [42001-214]
+2023-06-09 04:59:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "FIRST_USER BINARY VARYING(255)": "X'aced00057372001d636f6d2e43686974436861742e64656d6f2e656e746974792e557365727652... (751)"; SQL statement:
+insert into conversations (id, first_user, second_user) values (default, ?, ?) [22001-214]

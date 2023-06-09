@@ -1,0 +1,40 @@
+package com.ChitChat.demo.business.concretes;
+
+import com.ChitChat.demo.business.abstracts.ConversationService;
+import com.ChitChat.demo.dto.requests.CreateConversationRequest;
+import com.ChitChat.demo.dto.responses.ConversationVM;
+import com.ChitChat.demo.entity.Conversation;
+import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.mapper.ModelMapperService;
+import com.ChitChat.demo.repository.ConversationRepository;
+import com.ChitChat.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class ConversationManager implements ConversationService {
+
+    @Autowired
+    private ConversationRepository conversationRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapperService mapperService;
+    @Override
+    public ConversationVM save(CreateConversationRequest createConversationRequest) {
+        List<User> participants = new ArrayList<>();
+
+        for (String username:createConversationRequest.getParticipants()) {
+            User user = userRepository.findByUsername(username).orElseThrow();
+            participants.add(user);
+        }
+        Conversation conversation = new Conversation();
+        conversation.setParticipants(participants);
+        var response = mapperService.forResponse().map(conversationRepository.save(conversation),ConversationVM.class);
+        return response;
+    }
+}

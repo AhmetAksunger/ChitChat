@@ -18,10 +18,12 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    private String senderName;
-    private String receiverName;
     private String message;
-    private Status status;
     private Date timeStamp;
+
+    @ManyToOne
+    private Conversation conversation;
+
+    @ManyToOne
+    private User user;
 }

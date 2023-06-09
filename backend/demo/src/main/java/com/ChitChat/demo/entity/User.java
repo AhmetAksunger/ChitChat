@@ -26,6 +26,12 @@ public class User implements UserDetails {
 
     private String password;
 
+    @ManyToMany(mappedBy = "participants")
+    private List<Conversation> conversations;
+
+    @OneToMany(mappedBy = "user")
+    private List<Message> messages;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Token> tokens;
     @Override
