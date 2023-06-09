@@ -3,10 +3,12 @@ import { getPublicConversations } from '../api/ApiCalls';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const PublicConversationList = (props) => {
+const ConversationList = (props) => {
 
     const [publicConversations, setPublicConversations] = useState([]);
     const [activeConversationId, setActiveConversationId] = useState(1);
+
+    const {newMessagesCount} = props;
 
     useEffect(() => {
         loadPublicConversations();
@@ -30,13 +32,14 @@ const PublicConversationList = (props) => {
         <>
             {publicConversations.map((conversation,index) => {
                 const isActive = conversation.id === activeConversationId;
-                let className = "list-group-item list-group-item-action";
-                if(isActive){className = "list-group-item list-group-item-action active"}
+                let className = "list-group-item list-group-item-action d-flex justify-content-between align-items-start";
+                if(isActive){className = "list-group-item list-group-item-action active d-flex justify-content-between align-items-start"}
                 return(
                     <span className={className} style={{cursor:'pointer'}} aria-current="true" onClick={() => {handleConversationClick(conversation.id)}}>
-                        <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">{`Public Chat ${conversation.id}`}</h5>
-                        </div>
+                        <h5 className="mb-1">{`Public Chat ${conversation.id}`}</h5>
+                        
+                        {newMessagesCount[conversation.id] > 0 && <span class="badge">{newMessagesCount[conversation.id]}</span>}
+
                         <p className="mb-1">This channel is for general discussions and public messages.</p>
                     </span>
                 );
@@ -46,4 +49,4 @@ const PublicConversationList = (props) => {
     );
 };
 
-export default PublicConversationList;
+export default ConversationList;

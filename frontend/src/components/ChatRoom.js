@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
-import { getUsers } from '../api/ApiCalls';
+import { getConversationMessages, getUsers } from '../api/ApiCalls';
 import UserList from './UserList';
-import PublicConversationList from './PublicConversationList';
+import ConversationList from './ConversationList';
 
 var stompClient = null;
 
@@ -18,7 +18,18 @@ const ChatRoom = (props) => {
         message: ""
     });
 
-    const [window,setWindow] = useState("Public");
+    const [chatWindow, setChatWindow] = useState(() => {
+        return "Public Chat 1";
+      });
+
+    const [chatId,setChatId] = useState(1);
+
+    const [conversationMessages,setConversationMessages] = useState({
+        conversationId: 0,
+        messages: []
+    });
+
+    const [newMessagesCount, setNewMessagesCount] = useState({});
 
     const handleMessage = (event) => {
         const message = event.target.value;
@@ -36,7 +47,8 @@ const ChatRoom = (props) => {
 
     useEffect(()=>{
         registerUser();
-    },[]);
+        loadConversationMessages(chatId);
+    },[chatId]);
 
     const onConnected = () => {
         setUserData({
@@ -51,24 +63,40 @@ const ChatRoom = (props) => {
 
     const onPublicMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
+        const {conversationId,user} = payloadData;
+        if(chatWindow === `Public Chat ${conversationId}`){
+            loadConversationMessages(conversationId);
+        }
+        if(user.username !== username){
+            setNewMessagesCount((previousState) => {
+                const updatedState = {...previousState};
+    
+                if (conversationId in updatedState) {
+                    updatedState[conversationId] += 1;
+                  } else {
+                    updatedState[conversationId] = 1;
+                  }
+    
+                  return updatedState;
+            });
+        }
 
     };
 
     const onPrivateMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-
     }
 
     const onError = (error) => {
         console.log(error);
     }
 
-    const sendPublicMessage = () => {
+    const sendPublicMessage = (conversationId) => {
         if(stompClient){
             let chatMessage = {
                 senderName: username,
                 message: userData.message,
-                conversationId: 1,
+                conversationId: conversationId,
             };
 
             stompClient.send(`/app/message`,{},JSON.stringify(chatMessage));
@@ -80,7 +108,7 @@ const ChatRoom = (props) => {
         if (stompClient) {
           var chatMessage = {
             senderName: username,
-            receiverName:window,
+            receiverName:chatWindow,
             message: userData.message,
             status:"MESSAGE"
           };
@@ -91,27 +119,46 @@ const ChatRoom = (props) => {
 
     
     const onClickUser = (clickedUsername) => {
-        setWindow(clickedUsername);
+        setChatWindow(clickedUsername);
     }
 
     const onClickPublicChat = (publicChatId) => {
-        setWindow(`Public Chat ${publicChatId}`);
+        setChatWindow(`Public Chat ${publicChatId}`);
+        setChatId(publicChatId);
+        loadConversationMessages(publicChatId);
+
+        setNewMessagesCount((previousState) => {
+            const updatedState = {...previousState};
+            
+            updatedState[publicChatId] = 0;
+            return updatedState;
+        });
     }
+
+    const loadConversationMessages = async (conversationId) => {
+        try {
+            const response = await getConversationMessages(conversationId);
+            setConversationMessages(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
     return (
         <div className='container'>
         {userData.connected && (
             <div className='row'>
                 <div className='col-md-3'>
                     <div className="list-group">
-                            <PublicConversationList onClickPublicChat={onClickPublicChat}/>
+                        <ConversationList onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
                     </div>
                 </div>
                 <div className='col-md-6'>
                     <div>
-                        <ChatBox window={window}/>
+                        <ChatBox window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages}/>
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px'}}/>
-                            <span class="material-symbols-outlined" onClick={window.includes("Public") ? sendPublicMessage : sendPrivateMessage} style={{cursor: 'pointer'}}>
+                            <span class="material-symbols-outlined" onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : sendPrivateMessage} style={{cursor: 'pointer'}}>
                             send
                             </span>    
                         </div>

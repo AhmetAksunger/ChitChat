@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageVM {
+public class GetConversationMessagesResponse {
+
     private long id;
-    private String message;
-    private Date timeStamp;
-    private long conversationId;
-    private UserVM user;
+    private boolean isPublic;
+    List<MessageVM> messages;
 }

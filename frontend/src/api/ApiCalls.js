@@ -11,3 +11,7 @@ export const getUsers = (page = 0, size = 5) => {
 export const getPublicConversations = () => {
     return axios.get("http://localhost:8080/api/v1/conversations/public");
 }
+
+export const getConversationMessages = (conversationId) => {
+    return axios.get(`http://localhost:8080/api/v1/conversations/${conversationId}/messages`);
+}

@@ -39,8 +39,6 @@ public class MessageManager implements MessageService {
 
         var messageToBeMapped = messageRepository.save(message);
         MessageVM response = mapperService.forResponse().map(messageToBeMapped,MessageVM.class);
-        response.setSenderName(sender.getUsername());
-        response.setConversationId(message.getConversation().getId());
         return response;
     }
 
