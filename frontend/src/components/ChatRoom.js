@@ -4,12 +4,13 @@ import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
 import { getUsers } from '../api/ApiCalls';
 import UserList from './UserList';
+import PublicConversationList from './PublicConversationList';
 
 var stompClient = null;
 
 const ChatRoom = (props) => {
     
-    const {username} = props.authState.user;
+    const {username,token} = props.authState.user;
 
     const [userData,setUserData] = useState({
         receiverName: "",
@@ -17,7 +18,7 @@ const ChatRoom = (props) => {
         message: ""
     });
 
-    const [window,setWindow] = useState("PUBLIC");
+    const [window,setWindow] = useState("Public");
 
     const handleMessage = (event) => {
         const message = event.target.value;
@@ -45,17 +46,8 @@ const ChatRoom = (props) => {
         
         stompClient.subscribe("/chatroom/public",onPublicMessageReceived);
         stompClient.subscribe(`/user/${username}/private`,onPrivateMessageReceived);
-        userJoin();
     };
 
-    const userJoin = () => {
-        let chatMessage = {
-            senderName: username,
-            status: "JOIN"
-        };
-
-        stompClient.send(`/app/message`,{},JSON.stringify(chatMessage));
-    }
 
     const onPublicMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
@@ -76,7 +68,7 @@ const ChatRoom = (props) => {
             let chatMessage = {
                 senderName: username,
                 message: userData.message,
-                status: "MESSAGE"
+                conversationId: 1,
             };
 
             stompClient.send(`/app/message`,{},JSON.stringify(chatMessage));
@@ -92,10 +84,7 @@ const ChatRoom = (props) => {
             message: userData.message,
             status:"MESSAGE"
           };
-
-            privateMessages.get(window).push(chatMessage);
-            setPrivateMessages(new Map(privateMessages));
-            stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/private-message",{}, JSON.stringify(chatMessage));
             setUserData({...userData,"message": ""});
         }
     }
@@ -105,27 +94,24 @@ const ChatRoom = (props) => {
         setWindow(clickedUsername);
     }
 
-
+    const onClickPublicChat = (publicChatId) => {
+        setWindow(`Public Chat ${publicChatId}`);
+    }
     return (
         <div className='container'>
         {userData.connected && (
             <div className='row'>
                 <div className='col-md-3'>
                     <div className="list-group">
-                        <span className="list-group-item list-group-item-action active" aria-current="true">
-                            <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">Public Chat</h5>
-                            </div>
-                            <p className="mb-1">This channel is for general discussions and public messages.</p>
-                        </span>
+                            <PublicConversationList onClickPublicChat={onClickPublicChat}/>
                     </div>
                 </div>
                 <div className='col-md-6'>
                     <div>
-                        <ChatBox window={window} privateMessages={privateMessages} publicMessages={publicMessages} addOfflineUser={addOfflineUser}/>
+                        <ChatBox window={window}/>
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px'}}/>
-                            <span class="material-symbols-outlined" onClick={window==="PUBLIC" ? sendPublicMessage : sendPrivateMessage} style={{cursor: 'pointer'}}>
+                            <span class="material-symbols-outlined" onClick={window.includes("Public") ? sendPublicMessage : sendPrivateMessage} style={{cursor: 'pointer'}}>
                             send
                             </span>    
                         </div>

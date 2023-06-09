@@ -18,6 +18,7 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private boolean isPublic;
     @ManyToMany
     @JoinTable(
             name = "user_conversation",

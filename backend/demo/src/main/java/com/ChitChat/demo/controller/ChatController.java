@@ -4,12 +4,15 @@ import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
 import com.ChitChat.demo.dto.responses.MessageVM;
 import com.ChitChat.demo.entity.Message;
+import com.ChitChat.demo.entity.Token;
 import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.repository.TokenRepository;
 import com.ChitChat.demo.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +27,26 @@ public class ChatController {
 
     @Autowired
     private MessageService messageService;
-    /*@MessageMapping("/message") // /app/message
+
+    @Autowired
+    private TokenRepository tokenRepository;
+    @MessageMapping("/message") // /app/message
     @SendTo("/chatroom/public")
-    public Message receivePublicMessage(@Payload Message message){
+    public MessageVM receivePublicMessage(@Payload CreateMessageRequest createMessageRequest) {
 
-        return messageService.save(message);
-    }*/
-
-    @MessageMapping("/private-message")
-    public MessageVM receivePrivateMessage(@Payload CreateMessageRequest createMessageRequest, @CurrentUser User sender){
-        messagingTemplate.convertAndSendToUser(sender.getUsername(),"/private",createMessageRequest.getMessage()); // /user/{username}/private
-        return messageService.save(createMessageRequest,sender);
+        return messageService.save(createMessageRequest, createMessageRequest.getSenderName());
     }
 
+    @MessageMapping("/private-message")
+    public MessageVM receivePrivateMessage(@Payload CreateMessageRequest createMessageRequest){
+        messagingTemplate.convertAndSendToUser(createMessageRequest.getSenderName(),"/private",createMessageRequest.getMessage()); // /user/{username}/private
+        return messageService.save(createMessageRequest,createMessageRequest.getSenderName());
+    }
+
+    /*
     @PostMapping("/test")
     public MessageVM a(@RequestBody CreateMessageRequest createMessageRequest,@CurrentUser User sender){
         return messageService.save(createMessageRequest,sender);
     }
+     */
 }

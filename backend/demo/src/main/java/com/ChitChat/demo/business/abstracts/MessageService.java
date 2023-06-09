@@ -8,6 +8,6 @@ import com.ChitChat.demo.entity.User;
 import java.util.List;
 
 public interface MessageService {
-    MessageVM save(CreateMessageRequest createMessageRequest, User sender);
+    MessageVM save(CreateMessageRequest createMessageRequest, String senderName);
 
 }

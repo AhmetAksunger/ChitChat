@@ -3,6 +3,7 @@ package com.ChitChat.demo.business.concretes;
 import com.ChitChat.demo.business.abstracts.ConversationService;
 import com.ChitChat.demo.dto.requests.CreateConversationRequest;
 import com.ChitChat.demo.dto.responses.ConversationVM;
+import com.ChitChat.demo.dto.responses.GetPublicConversationsResponse;
 import com.ChitChat.demo.entity.Conversation;
 import com.ChitChat.demo.entity.User;
 import com.ChitChat.demo.mapper.ModelMapperService;
@@ -36,5 +37,16 @@ public class ConversationManager implements ConversationService {
         conversation.setParticipants(participants);
         var response = mapperService.forResponse().map(conversationRepository.save(conversation),ConversationVM.class);
         return response;
+    }
+
+    @Override
+    public List<GetPublicConversationsResponse> getPublicConversations() {
+        List<Conversation> conversations = conversationRepository.findByIsPublicTrue();
+        List<GetPublicConversationsResponse> responses = new ArrayList<>();
+        for (Conversation conversation:conversations) {
+            var response = mapperService.forResponse().map(conversation,GetPublicConversationsResponse.class);
+            responses.add(response);
+        }
+        return responses;
     }
 }

@@ -3,18 +3,15 @@ package com.ChitChat.demo.business.concretes;
 import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
 import com.ChitChat.demo.dto.responses.MessageVM;
-import com.ChitChat.demo.entity.Conversation;
-import com.ChitChat.demo.entity.Message;
-import com.ChitChat.demo.entity.Status;
-import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.entity.*;
 import com.ChitChat.demo.mapper.ModelMapperService;
 import com.ChitChat.demo.repository.ConversationRepository;
 import com.ChitChat.demo.repository.MessageRepository;
+import com.ChitChat.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class MessageManager implements MessageService {
@@ -23,13 +20,17 @@ public class MessageManager implements MessageService {
     private MessageRepository messageRepository;
 
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private ModelMapperService mapperService;
     @Autowired
     private ConversationRepository conversationRepository;
-    @Override
-    public MessageVM save(CreateMessageRequest createMessageRequest,User sender) {
-        Conversation conversation = conversationRepository.findById(createMessageRequest.getConversationId()).orElseThrow();
 
+    @Override
+    public MessageVM save(CreateMessageRequest createMessageRequest,String senderName) {
+
+        Conversation conversation = conversationRepository.findById(createMessageRequest.getConversationId()).orElseThrow();
+        User sender = userRepository.findByUsername(senderName).orElseThrow();
         Message message = new Message();
         message.setMessage(createMessageRequest.getMessage());
         message.setTimeStamp(new Date());
