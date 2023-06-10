@@ -57,4 +57,22 @@ public class ConversationManager implements ConversationService {
         GetConversationMessagesResponse response = mapperService.forResponse().map(conversation, GetConversationMessagesResponse.class);
         return response;
     }
+
+    @Override
+    public GetConversationMessagesResponse getConversationByParticipants(User user, String username) {
+        System.err.println(username);
+        User secondUser = userRepository.findByUsername(username).orElseThrow();
+        List<User> participants = new ArrayList<>();
+        participants.add(user);
+        participants.add(secondUser);
+        Conversation conversation = conversationRepository.findByParticipantsIn(participants);
+        GetConversationMessagesResponse response = new GetConversationMessagesResponse();
+        if(conversation == null){
+            response.setExists(false);
+            return response;
+        }
+        response = mapperService.forResponse().map(conversation, GetConversationMessagesResponse.class);
+
+        return response;
+    }
 }

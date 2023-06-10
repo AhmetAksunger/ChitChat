@@ -33,4 +33,9 @@ public class ConversationController {
     public GetConversationMessagesResponse getConversationMessages(@PathVariable(required = true) long conversationId){
         return conversationService.getConversationMessages(conversationId);
     }
+
+    @GetMapping("/api/v1/conversations/participants/{username}/messages")
+    public GetConversationMessagesResponse getConversationByParticipants(@CurrentUser User user, @PathVariable String username){
+        return conversationService.getConversationByParticipants(user,username);
+    }
 }

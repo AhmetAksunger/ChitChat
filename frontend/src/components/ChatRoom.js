@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
-import { getConversationMessages, getUsers } from '../api/ApiCalls';
+import { getConversationMessages, getPrivateConversationMessages, getUsers } from '../api/ApiCalls';
 import UserList from './UserList';
 import ConversationList from './ConversationList';
 
@@ -48,6 +48,11 @@ const ChatRoom = (props) => {
     useEffect(()=>{
         registerUser();
         loadConversationMessages(chatId);
+        return () => {
+            if (stompClient) {
+              stompClient.disconnect();
+            }
+          };
     },[chatId]);
 
     const onConnected = () => {
@@ -118,7 +123,13 @@ const ChatRoom = (props) => {
     }
 
     
-    const onClickUser = (clickedUsername) => {
+    const onClickUser = async (clickedUsername) => {
+        try {
+            const response = await getPrivateConversationMessages(clickedUsername);
+            console.log(response.data);
+        } catch (error) {
+            
+        }
         setChatWindow(clickedUsername);
     }
 

@@ -15,3 +15,7 @@ export const getPublicConversations = () => {
 export const getConversationMessages = (conversationId) => {
     return axios.get(`http://localhost:8080/api/v1/conversations/${conversationId}/messages`);
 }
+
+export const getPrivateConversationMessages = (username) => {
+    return axios.get(`http://localhost:8080/api/v1/conversations/participants/${username}/messages`)
+}

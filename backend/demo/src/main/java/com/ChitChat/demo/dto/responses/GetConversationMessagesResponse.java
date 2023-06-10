@@ -8,10 +8,15 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class GetConversationMessagesResponse {
 
     private long id;
     private boolean isPublic;
     List<MessageVM> messages;
+
+    private boolean isExists;
+
+    public GetConversationMessagesResponse(){
+        this.isExists = true;
+    }
 }
