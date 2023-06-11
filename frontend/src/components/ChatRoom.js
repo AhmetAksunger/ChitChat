@@ -4,6 +4,8 @@ import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
 import { getConversationMessages, getPrivateConversationMessages, getUsers } from '../api/ApiCalls';
 import UserList from './UserList';
+import Conver from './ConversationItem';
+import ConversationItem from './ConversationItem';
 import ConversationList from './ConversationList';
 
 var stompClient = null;
@@ -26,7 +28,8 @@ const ChatRoom = (props) => {
 
     const [conversationMessages,setConversationMessages] = useState({
         conversationId: 0,
-        messages: []
+        messages: [],
+        exists: true
     });
 
     const [newMessagesCount, setNewMessagesCount] = useState({});
@@ -126,7 +129,7 @@ const ChatRoom = (props) => {
     const onClickUser = async (clickedUsername) => {
         try {
             const response = await getPrivateConversationMessages(clickedUsername);
-            console.log(response.data);
+            setConversationMessages(response.data);
         } catch (error) {
             
         }
@@ -154,19 +157,28 @@ const ChatRoom = (props) => {
             console.log(error);
         }
     }
-    
+    /* 
+                    <div className='col-md-3'>
+                    <ul class="list-group">
+                        <li class="list-group-item active" aria-current="true">All Users</li>
+                        <UserList onClickUser={onClickUser}/>
+                    </ul>
+                </div>
+    */
     return (
         <div className='container'>
         {userData.connected && (
             <div className='row'>
-                <div className='col-md-3'>
-                    <div className="list-group">
-                        <ConversationList onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
-                    </div>
+                <div className='col-md-3' style={{marginTop:'40px'}}>
+                                        
+                    {/*<div className="list-group">
+                        <ConversationItem onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
+        </div> */}
+                    <ConversationList onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
                 </div>
-                <div className='col-md-6'>
-                    <div>
-                        <ChatBox window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages}/>
+                <div className='col-md-9'>
+                    <div className='container'>
+                        <ChatBox authState={props.authState} window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages} loadConversationMessages={loadConversationMessages}/>
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px'}}/>
                             <span class="material-symbols-outlined" onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : sendPrivateMessage} style={{cursor: 'pointer'}}>
@@ -175,12 +187,7 @@ const ChatRoom = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className='col-md-3'>
-                    <ul class="list-group">
-                        <li class="list-group-item active" aria-current="true">All Users</li>
-                        <UserList onClickUser={onClickUser}/>
-                    </ul>
-                </div>
+
             </div>
         )}
         </div>

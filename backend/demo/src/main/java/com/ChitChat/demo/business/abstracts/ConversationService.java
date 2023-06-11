@@ -9,7 +9,7 @@ import com.ChitChat.demo.entity.User;
 import java.util.List;
 
 public interface ConversationService {
-    ConversationVM save(CreateConversationRequest createConversationRequest);
+    ConversationVM save(CreateConversationRequest createConversationRequest, User loggedInUser);
 
     List<GetPublicConversationsResponse> getPublicConversations();
 

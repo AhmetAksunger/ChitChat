@@ -27,20 +27,6 @@ public class ConversationManager implements ConversationService {
     @Autowired
     private ModelMapperService mapperService;
     @Override
-    public ConversationVM save(CreateConversationRequest createConversationRequest) {
-        List<User> participants = new ArrayList<>();
-
-        for (String username:createConversationRequest.getParticipants()) {
-            User user = userRepository.findByUsername(username).orElseThrow();
-            participants.add(user);
-        }
-        Conversation conversation = new Conversation();
-        conversation.setParticipants(participants);
-        var response = mapperService.forResponse().map(conversationRepository.save(conversation),ConversationVM.class);
-        return response;
-    }
-
-    @Override
     public List<GetPublicConversationsResponse> getPublicConversations() {
         List<Conversation> conversations = conversationRepository.findByIsPublicTrue();
         List<GetPublicConversationsResponse> responses = new ArrayList<>();
@@ -49,6 +35,21 @@ public class ConversationManager implements ConversationService {
             responses.add(response);
         }
         return responses;
+    }
+
+    @Override
+    public ConversationVM save(CreateConversationRequest createConversationRequest, User loggedInUser) {
+        List<User> participants = new ArrayList<>();
+        participants.add(loggedInUser);
+        for (String username:createConversationRequest.getParticipants()) {
+            User user = userRepository.findByUsername(username).orElseThrow();
+            participants.add(user);
+        }
+        Conversation conversation = new Conversation();
+        conversation.setParticipants(participants);
+        var c = conversationRepository.save(conversation);
+        var response = mapperService.forResponse().map(c,ConversationVM.class);
+        return response;
     }
 
     @Override

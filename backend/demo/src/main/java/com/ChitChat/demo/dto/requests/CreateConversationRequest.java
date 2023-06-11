@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CreateConversationRequest {
+public class    CreateConversationRequest {
 
     private List<String> participants;
 

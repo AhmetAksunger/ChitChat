@@ -19,3 +19,12 @@ export const getConversationMessages = (conversationId) => {
 export const getPrivateConversationMessages = (username) => {
     return axios.get(`http://localhost:8080/api/v1/conversations/participants/${username}/messages`)
 }
+
+export const startConversationWithUser = (data,token) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    return axios.post("http://localhost:8080/api/v1/conversations",data,config)
+}

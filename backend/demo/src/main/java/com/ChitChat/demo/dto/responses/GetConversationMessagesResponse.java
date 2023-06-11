@@ -11,8 +11,10 @@ import java.util.List;
 public class GetConversationMessagesResponse {
 
     private long id;
+
     private boolean isPublic;
-    List<MessageVM> messages;
+
+    private List<MessageVM> messages;
 
     private boolean isExists;
 
