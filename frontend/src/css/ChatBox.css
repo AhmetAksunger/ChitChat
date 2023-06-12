@@ -1,6 +1,23 @@
-body{
-  background:#eee;    
+
+.chat-wrapper {
+  max-height: 500px; /* Set the desired height of the chatbox */
+  min-height: 500px;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
+
+.chat-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-wrapper::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.chat-wrapper::-webkit-scrollbar-thumb {
+  background-color: #888888;
+  border-radius: 5px;
+}
+
 .chat-list {
   padding: 0;
   font-size: .8rem;
@@ -33,6 +50,11 @@ body{
   padding: 10px 20px;
   position: relative;
 }
+
+.chat-list .custom-button {
+  margin-right: 70px;
+}
+
 
 .chat-list .chat-message:before {
   content: "";

@@ -21,6 +21,7 @@ public class ConversationController {
 
     @PostMapping("/api/v1/conversations")
     public ConversationVM save(@RequestBody CreateConversationRequest createConversationRequest, @CurrentUser User user){
+
         return conversationService.save(createConversationRequest, user);
     }
 

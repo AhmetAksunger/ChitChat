@@ -3,7 +3,7 @@ import { getUsers } from '../api/ApiCalls';
 
 const UserList = (props) => {
     
-
+/*
     const [page,setPage] = useState({
         content: [],
         size: 0,
@@ -11,14 +11,17 @@ const UserList = (props) => {
         last: false,
         first: false
     });
+*/
 
+    const [users,setUsers] = useState([]);
     useEffect(() => {loadUsers()}, [])
 
     const loadUsers = async () => {
 
         try {
-            const response = await getUsers();
-            setPage(response.data);
+            const response = await getUsers(false);
+            //setPage(response.data);
+            setUsers(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -27,13 +30,16 @@ const UserList = (props) => {
 
     return (
         <>
-        {page.content.map((user,index) => {
+        {users.map((username,index) => {
             return(
-                <li class="list-group-item" aria-current="true">
-                    <span onClick={() => {props.onClickUser(user.username)}} style={{cursor:'pointer'}}>{user.username}</span>
-                </li>
+            <li className="clearfix" onClick={() => {props.onClickUser(username.username)}}>
+                {/*<img src={} alt="avatar" width={'32px'}/>*/}
+                <div className="about">
+                    <div className="name">{username.username}</div>
+                </div>
+            </li>
             );
-        }) }
+        })}
         </>
     );
 };

@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class UserManager implements UserService {
@@ -38,6 +41,17 @@ public class UserManager implements UserService {
     public Page<UserVM> getAllUsers(Pageable page) {
         Page<User> users = userRepository.findAll(page);
         return users.map(userInList -> mapperService.forResponse().map(userInList, UserVM.class));
+    }
+
+    @Override
+    public List<UserVM> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserVM> responses = new ArrayList<>();
+        for (User user:users) {
+            var response =mapperService.forResponse().map(user, UserVM.class);
+            responses.add(response);
+        }
+        return responses;
     }
 
 

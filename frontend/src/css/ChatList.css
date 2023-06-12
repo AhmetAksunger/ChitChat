@@ -22,6 +22,25 @@
     border-radius: 5px;
   }
   
+  /* Scroll Bar */
+  .scroll {
+    max-height: 500px; /* Set the desired height of the chatbox */
+    overflow-y: auto;
+  }
+
+  .scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  .scroll::-webkit-scrollbar-thumb {
+    background-color: #888888;
+    border-radius: 5px;
+  }
+
   /* People list styles */
   .people-list .search {
     padding: 20px;
@@ -43,7 +62,7 @@
   }
   
   .people-list ul {
-    padding: 20px;
+    padding: 10px;
   }
   
   .people-list ul li {

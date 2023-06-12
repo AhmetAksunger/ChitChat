@@ -39,8 +39,9 @@ public class ChatController {
 
     @MessageMapping("/private-message")
     public MessageVM receivePrivateMessage(@Payload CreateMessageRequest createMessageRequest){
-        messagingTemplate.convertAndSendToUser(createMessageRequest.getSenderName(),"/private",createMessageRequest.getMessage()); // /user/{username}/private
-        return messageService.save(createMessageRequest,createMessageRequest.getSenderName());
+        MessageVM message = messageService.save(createMessageRequest,createMessageRequest.getSenderName());
+        messagingTemplate.convertAndSendToUser(createMessageRequest.getReceiverName(),"/private",message); // /user/{username}/private
+        return message;
     }
 
     /*
