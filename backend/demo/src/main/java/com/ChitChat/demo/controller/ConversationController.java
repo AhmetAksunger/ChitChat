@@ -46,4 +46,5 @@ public class ConversationController {
     public List<GetMessagedUsersResponse> getMessagedUsersResponses(@CurrentUser User user){
         return conversationService.getMessagedUsersResponse(user);
     }
+
 }

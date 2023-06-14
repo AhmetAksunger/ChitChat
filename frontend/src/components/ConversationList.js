@@ -10,7 +10,6 @@ import MessagedUserList from './MessagedUserList';
 const ConversationList = (props) => {
 
     const [publicConversations, setPublicConversations] = useState([]);
-    const [activeConversationId, setActiveConversationId] = useState(1);
 
     const {newMessagesCount} = props;
 
@@ -57,10 +56,10 @@ const ConversationList = (props) => {
                     </ul>
                     <hr />
                     <div className="search">
-                        <p className='title'>Messaged Users</p>
+                        <p className='title'>Chats</p>
                     </div>
                     <ul className="list">
-                        <MessagedUserList authState={props.authState} onClickUser={props.onClickUser}/>                    
+                        <MessagedUserList newMessagesCount={newMessagesCount} authState={props.authState} messagedUsers={props.messagedUsers} onClickUser={props.onClickUser}/>
                     </ul>
                     <div className="search">
                         <p className='title'>All Users</p>

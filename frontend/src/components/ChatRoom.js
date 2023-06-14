@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
-import { getConversationMessages, getPrivateConversationMessages } from '../api/ApiCalls';
+import { getConversationMessages, getMessagedUsers, getPrivateConversationMessages } from '../api/ApiCalls';
 import ConversationList from './ConversationList';
 
 var stompClient = null;
@@ -32,6 +32,17 @@ const ChatRoom = (props) => {
 
     const [newMessagesCount, setNewMessagesCount] = useState({});
 
+    const [messagedUsers, setMessagedUsers] = useState([]);
+
+    const loadMessagedUsers = async () => {
+        try {
+            const response = await getMessagedUsers(token);
+            setMessagedUsers(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleMessage = (event) => {
         const message = event.target.value;
         setUserData({
@@ -49,6 +60,7 @@ const ChatRoom = (props) => {
     useEffect(()=>{
         registerUser();
         loadConversationMessages(chatId);
+        loadMessagedUsers();
         return () => {
             if (stompClient) {
               stompClient.disconnect();
@@ -91,11 +103,25 @@ const ChatRoom = (props) => {
 
     const onPrivateMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        const {conversationId, user} = payloadData;        
+        const {conversationId, user} = payloadData;
+        
         if(chatWindow === user.username){
             loadConversationMessages(conversationId);
         }else if(user.username === username){
             loadConversationMessages(conversationId);
+        }
+        if(user.username !== username){
+            setNewMessagesCount((previousState) => {
+                const updatedState = {...previousState};
+    
+                if (user.username in updatedState) {
+                    updatedState[user.username] += 1;
+                  } else {
+                    updatedState[user.username] = 1;
+                  }
+    
+                  return updatedState;
+            });
         }
     }
 
@@ -131,11 +157,17 @@ const ChatRoom = (props) => {
 
     
     const onClickUser = async (clickedUsername) => {
-        console.log(token);
         try {
             const response = await getPrivateConversationMessages(clickedUsername,token);
             setConversationMessages(response.data);
             setChatId(response.data.id);
+
+            setNewMessagesCount((previousState) => {
+                const updatedState = {...previousState};
+                
+                updatedState[clickedUsername] = 0;
+                return updatedState;
+            });
         } catch (error) {
             
         }
@@ -157,6 +189,11 @@ const ChatRoom = (props) => {
     const loadConversationMessages = async (conversationId) => {
         try {
             const response = await getConversationMessages(conversationId);
+
+            if(response.data.messages.length === 1){
+                loadMessagedUsers();
+            };
+
             setConversationMessages(response.data);
             setChatId(conversationId);
         } catch (error) {
@@ -173,7 +210,9 @@ const ChatRoom = (props) => {
                     {/*<div className="list-group">
                         <ConversationItem onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
         </div> */}
-                    <ConversationList authState={props.authState} onClickUser={onClickUser} onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
+                    <ConversationList authState={props.authState} onClickUser={onClickUser} onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}
+                    messagedUsers={messagedUsers}
+                    />
 
                 </div>
                 <div className='col-md-5'>

@@ -7,23 +7,22 @@ const MessagedUserList = (props) => {
 
     const {token} = props.authState;
 
-    const [messagedUsers, setMessagedUsers] = useState([]);
-
-    useEffect(()=>{loadMessagedUsers();},[]);
-
-    const loadMessagedUsers = async () => {
-        try {
-            const response = await getMessagedUsers(token);
-            setMessagedUsers(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const {newMessagesCount} = props;
 
     return (
-        <div>
-            
-        </div>
+        <>
+        {props.messagedUsers.map((username,index) => {
+            return(
+            <li className="clearfix" onClick={() => {props.onClickUser(username.username)}}>
+                {/*<img src={} alt="avatar" width={'32px'}/>*/}
+                <div className="about">
+                    <div className="name">{username.username}</div>
+                    {newMessagesCount[username.username] > 0 && <span class="badge">{newMessagesCount[username.username]}</span>}
+                </div>
+            </li>
+            );
+        })}
+        </>
     );
 };
 

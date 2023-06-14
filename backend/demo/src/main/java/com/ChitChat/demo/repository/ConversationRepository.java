@@ -20,7 +20,7 @@ public interface ConversationRepository extends JpaRepository<Conversation,Long>
     Conversation findConversationByParticipants(@Param("user1") User user1,
                                                        @Param("user2") User user2);
 
-    @Query("SELECT c FROM Conversation c WHERE (:user) MEMBER OF c.participants")
+    @Query("SELECT c FROM Conversation c WHERE (:user) MEMBER OF c.participants AND SIZE(c.messages) > 0")
     List<Conversation> findMessagedUsers(@Param("user") User user);
 
 }
