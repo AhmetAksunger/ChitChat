@@ -34,7 +34,7 @@ public class DemoApplication {
 					userService.save(registerRequest);
 				}
 
-				for (int i = 1; i<=3; i++){
+				for (int i = 1; i<=2; i++){
 					Conversation conversation = new Conversation();
 					conversation.setPublic(true);
 					conversationRepository.save(conversation);

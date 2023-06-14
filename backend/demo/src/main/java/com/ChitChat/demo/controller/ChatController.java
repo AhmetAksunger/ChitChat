@@ -41,6 +41,8 @@ public class ChatController {
     public MessageVM receivePrivateMessage(@Payload CreateMessageRequest createMessageRequest){
         MessageVM message = messageService.save(createMessageRequest,createMessageRequest.getSenderName());
         messagingTemplate.convertAndSendToUser(createMessageRequest.getReceiverName(),"/private",message); // /user/{username}/private
+        messagingTemplate.convertAndSendToUser(createMessageRequest.getSenderName(),"/private",message); // /user/{username}/private
+
         return message;
     }
 

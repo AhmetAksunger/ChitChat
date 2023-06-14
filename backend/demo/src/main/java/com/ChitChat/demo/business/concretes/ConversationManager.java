@@ -4,6 +4,7 @@ import com.ChitChat.demo.business.abstracts.ConversationService;
 import com.ChitChat.demo.dto.requests.CreateConversationRequest;
 import com.ChitChat.demo.dto.responses.ConversationVM;
 import com.ChitChat.demo.dto.responses.GetConversationMessagesResponse;
+import com.ChitChat.demo.dto.responses.GetMessagedUsersResponse;
 import com.ChitChat.demo.dto.responses.GetPublicConversationsResponse;
 import com.ChitChat.demo.entity.Conversation;
 import com.ChitChat.demo.entity.User;
@@ -60,13 +61,9 @@ public class ConversationManager implements ConversationService {
     }
 
     @Override
-    public GetConversationMessagesResponse getConversationByParticipants(User user, String username) {
-        System.err.println(username);
-        User secondUser = userRepository.findByUsername(username).orElseThrow();
-        List<User> participants = new ArrayList<>();
-        participants.add(user);
-        participants.add(secondUser);
-        Conversation conversation = conversationRepository.findByParticipantsIn(participants);
+    public GetConversationMessagesResponse getConversationByParticipants(User user1, String username) {
+        User user2 = userRepository.findByUsername(username).orElseThrow();
+        Conversation conversation = conversationRepository.findConversationByParticipants(user1,user2);
         GetConversationMessagesResponse response = new GetConversationMessagesResponse();
         if(conversation == null){
             response.setExists(false);
@@ -75,5 +72,22 @@ public class ConversationManager implements ConversationService {
         response = mapperService.forResponse().map(conversation, GetConversationMessagesResponse.class);
 
         return response;
+    }
+
+    @Override
+    public List<GetMessagedUsersResponse> getMessagedUsersResponse(User user) {
+        List<Conversation> conversations = conversationRepository.findMessagedUsers(user);
+        List<GetMessagedUsersResponse> responses = new ArrayList<>();
+        for (Conversation conversation:conversations) {
+            List<User> participants = conversation.getParticipants();
+            for (User participant: participants){
+                if(!participant.getUsername().equals(user.getUsername())){
+                    GetMessagedUsersResponse response = new GetMessagedUsersResponse();
+                    response.setUsername(participant.getUsername());
+                    responses.add(response);
+                }
+            }
+        }
+        return responses;
     }
 }

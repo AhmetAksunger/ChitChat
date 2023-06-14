@@ -305,3 +305,6 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 2023-06-12 03:31:21 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]MESSAGES"; expected "MERGE"; SQL statement:
 MESSAGES [42001-214]
+2023-06-14 03:26:21 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]USER_CONVERSATION"; expected "UPDATE, USE"; SQL statement:
+USER_CONVERSATION [42001-214]

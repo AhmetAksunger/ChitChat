@@ -4,6 +4,7 @@ import com.ChitChat.demo.business.abstracts.ConversationService;
 import com.ChitChat.demo.dto.requests.CreateConversationRequest;
 import com.ChitChat.demo.dto.responses.ConversationVM;
 import com.ChitChat.demo.dto.responses.GetConversationMessagesResponse;
+import com.ChitChat.demo.dto.responses.GetMessagedUsersResponse;
 import com.ChitChat.demo.dto.responses.GetPublicConversationsResponse;
 import com.ChitChat.demo.entity.User;
 import com.ChitChat.demo.security.CurrentUser;
@@ -37,6 +38,12 @@ public class ConversationController {
 
     @GetMapping("/api/v1/conversations/participants/{username}/messages")
     public GetConversationMessagesResponse getConversationByParticipants(@CurrentUser User user, @PathVariable String username){
+
         return conversationService.getConversationByParticipants(user,username);
+    }
+
+    @GetMapping("/api/v1/conversations/messaged-participants")
+    public List<GetMessagedUsersResponse> getMessagedUsersResponses(@CurrentUser User user){
+        return conversationService.getMessagedUsersResponse(user);
     }
 }

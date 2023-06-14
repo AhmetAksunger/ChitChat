@@ -16,8 +16,13 @@ export const getConversationMessages = (conversationId) => {
     return axios.get(`http://localhost:8080/api/v1/conversations/${conversationId}/messages`);
 }
 
-export const getPrivateConversationMessages = (username) => {
-    return axios.get(`http://localhost:8080/api/v1/conversations/participants/${username}/messages`)
+export const getPrivateConversationMessages = (username,token) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    return axios.get(`http://localhost:8080/api/v1/conversations/participants/${username}/messages`,config)
 }
 
 export const startConversationWithUser = (data,token) => {

@@ -12,8 +12,9 @@ var stompClient = null;
 
 const ChatRoom = (props) => {
     
-    const {username,token} = props.authState.user;
-
+    const {token,user} = props.authState;
+    const {username} = user;
+    
     const [userData,setUserData] = useState({
         receiverName: "",
         connected: false,
@@ -93,8 +94,11 @@ const ChatRoom = (props) => {
 
     const onPrivateMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        if(chatWindow === payloadData){
-
+        const {conversationId, user} = payloadData;        
+        if(chatWindow === user.username){
+            loadConversationMessages(conversationId);
+        }else if(user.username === username){
+            loadConversationMessages(conversationId);
         }
     }
 
@@ -130,8 +134,9 @@ const ChatRoom = (props) => {
 
     
     const onClickUser = async (clickedUsername) => {
+        console.log(token);
         try {
-            const response = await getPrivateConversationMessages(clickedUsername);
+            const response = await getPrivateConversationMessages(clickedUsername,token);
             setConversationMessages(response.data);
             setChatId(response.data.id);
         } catch (error) {
@@ -161,14 +166,7 @@ const ChatRoom = (props) => {
             console.log(error);
         }
     }
-    /* 
-                    <div className='col-md-3'>
-                    <ul class="list-group">
-                        <li class="list-group-item active" aria-current="true">All Users</li>
-                        <UserList onClickUser={onClickUser}/>
-                    </ul>
-                </div>
-    */
+
     return (
         <div className='container'>
         {userData.connected && (
