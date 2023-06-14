@@ -3,6 +3,8 @@ import { getUsers } from '../api/ApiCalls';
 
 const UserList = (props) => {
     
+    const {token} = props.authState;
+
 /*
     const [page,setPage] = useState({
         content: [],
@@ -19,7 +21,7 @@ const UserList = (props) => {
     const loadUsers = async () => {
 
         try {
-            const response = await getUsers(false);
+            const response = await getUsers(false,token);
             //setPage(response.data);
             setUsers(response.data);
         } catch (error) {

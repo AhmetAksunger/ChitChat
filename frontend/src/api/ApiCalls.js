@@ -4,11 +4,17 @@ export const login = (creds) => {
     return axios.post("http://localhost:8080/api/v1/auth",creds)
 }
 
-export const getUsers = (pageable = true,page = 0, size = 5) => {
-    return axios.get(`http://localhost:8080/api/v1/users?pageable=${pageable}&page=${page}&size=${size}`);
+export const getUsers = (pageable = true,token,page = 0, size = 5) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return axios.get(`http://localhost:8080/api/v1/users?pageable=${pageable}&page=${page}&size=${size}`,config);
 }
 
 export const getPublicConversations = () => {
+
     return axios.get("http://localhost:8080/api/v1/conversations/public");
 }
 
@@ -33,3 +39,12 @@ export const startConversationWithUser = (data,token) => {
       };
     return axios.post("http://localhost:8080/api/v1/conversations",data,config)
 }
+
+export const getMessagedUsers = (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axios.get("http://localhost:8080/api/v1/conversations/messaged-participants",config)
+};

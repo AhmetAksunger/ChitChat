@@ -44,6 +44,7 @@
   /* People list styles */
   .people-list .search {
     padding: 20px;
+    padding-bottom: 5px;
   }
   
   .people-list input {
@@ -68,7 +69,11 @@
   .people-list ul li {
     padding-bottom: 20px;
   }
-  
+
+  .people-list ul li:hover {
+    background-color: #555862;
+  }
+
   .people-list img {
     float: left;
   }
@@ -102,6 +107,10 @@
   .clearfix {
     cursor: pointer;
   }
+  .clearfix:hover {
+    background-color: #555862;
+    border-radius: 5px;
+  }
   .clearfix:after {
     visibility: hidden;
     display: block;
@@ -110,4 +119,7 @@
     clear: both;
     height: 0;
   }
-  
+  .title {
+    --primary-360-hsl: 214 8.1% 61.2%;
+    color: hsl(var(--primary-360-hsl));
+  }

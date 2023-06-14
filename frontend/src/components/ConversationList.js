@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { getPublicConversations } from '../api/ApiCalls';
 import UserList from './UserList';
+import MessagedUserList from './MessagedUserList';
 
 const ConversationList = (props) => {
 
@@ -56,10 +57,16 @@ const ConversationList = (props) => {
                     </ul>
                     <hr />
                     <div className="search">
-                        <p>All Users</p>
+                        <p className='title'>Messaged Users</p>
                     </div>
                     <ul className="list">
-                        <UserList onClickUser={props.onClickUser}/>                    
+                        <MessagedUserList authState={props.authState} onClickUser={props.onClickUser}/>                    
+                    </ul>
+                    <div className="search">
+                        <p className='title'>All Users</p>
+                    </div>
+                    <ul className="list">
+                        <UserList authState={props.authState} onClickUser={props.onClickUser}/>                    
                     </ul>
                 </div>
             </div>

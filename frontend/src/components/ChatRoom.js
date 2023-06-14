@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
-import { getConversationMessages, getPrivateConversationMessages, getUsers } from '../api/ApiCalls';
-import UserList from './UserList';
-import Conver from './ConversationItem';
-import ConversationItem from './ConversationItem';
+import { getConversationMessages, getPrivateConversationMessages } from '../api/ApiCalls';
 import ConversationList from './ConversationList';
 
 var stompClient = null;
@@ -176,7 +173,7 @@ const ChatRoom = (props) => {
                     {/*<div className="list-group">
                         <ConversationItem onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
         </div> */}
-                    <ConversationList onClickUser={onClickUser} onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
+                    <ConversationList authState={props.authState} onClickUser={onClickUser} onClickPublicChat={onClickPublicChat} newMessagesCount={newMessagesCount}/>
 
                 </div>
                 <div className='col-md-5'>

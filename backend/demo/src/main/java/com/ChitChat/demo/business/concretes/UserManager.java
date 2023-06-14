@@ -38,14 +38,14 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public Page<UserVM> getAllUsers(Pageable page) {
-        Page<User> users = userRepository.findAll(page);
+    public Page<UserVM> getAllUsers(Pageable page, User loggedInUser) {
+        Page<User> users = userRepository.findByUsernameNot(page, loggedInUser.getUsername());
         return users.map(userInList -> mapperService.forResponse().map(userInList, UserVM.class));
     }
 
     @Override
-    public List<UserVM> getAllUsers() {
-        List<User> users = userRepository.findAll();
+    public List<UserVM> getAllUsers(User loggedInUser) {
+        List<User> users = userRepository.findByUsernameNot(loggedInUser.getUsername());
         List<UserVM> responses = new ArrayList<>();
         for (User user:users) {
             var response =mapperService.forResponse().map(user, UserVM.class);

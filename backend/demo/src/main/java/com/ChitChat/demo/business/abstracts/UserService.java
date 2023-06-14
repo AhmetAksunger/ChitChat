@@ -12,8 +12,8 @@ public interface UserService {
 
     void save(UserRegisterRequest userRegisterRequest);
 
-    Page<UserVM> getAllUsers(Pageable page);
+    Page<UserVM> getAllUsers(Pageable page, User loggedInUser);
 
-    List<UserVM> getAllUsers();
+    List<UserVM> getAllUsers(User loggedInUser);
 
 }
