@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/ChatBox.css'
 import { getConversationMessages, getPrivateConversationMessages, startConversationWithUser } from '../api/ApiCalls';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import DropdownDelete from './DropdownDelete';
 const ChatBox = (props) => {
 
     const {window,conversationMessages,authState,loadConversationMessages} = props;
@@ -13,6 +14,8 @@ const ChatBox = (props) => {
     const {messages: messageEntities, exists} = conversationMessages;
 
     const chatListRef = useRef(null);
+
+    const [hoveredMessageIndex,setHoveredMessageIndex] = useState(null);
 
     useEffect(() => {
         scrollToBottom();
@@ -75,6 +78,7 @@ const ChatBox = (props) => {
  
         );
     }
+
     return (
         <div className="container content">
             <div className="row">
@@ -87,21 +91,24 @@ const ChatBox = (props) => {
                                     {messageEntities.map((messageEntity,index) => {
                                         if(messageEntity.user.username === loggedInUser){
                                             return(
-                                                <li className="out">
+                                                <li className="out" key={index}>
                                                     <div className="chat-img">
                                                         <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
                                                     </div>
                                                     <div className="chat-body">
-                                                        <div className="chat-message">
-                                                            <strong style={{fontSize: "1.5rem"}}>{messageEntity.user.username}</strong>
-                                                            <p style={{fontSize: "1.5rem"}}>{messageEntity.message}</p>
+                                                    <div className="chat-message" onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+                                                        <div style={{ display: "flex" }}>
+                                                            {hoveredMessageIndex === index && <span class="material-symbols-outlined " style={{ cursor:'pointer', width: '8px', height: '6px', marginRight: '10px' }}>delete</span>}
+                                                            <strong style={{ fontSize: "1.5rem" , marginLeft:'10px'}}>{messageEntity.user.username}</strong>
+                                                        </div>
+                                                        <p style={{ fontSize: "1.5rem" }}>{messageEntity.message}</p>
                                                         </div>
                                                     </div>
                                                 </li>
                                             );
                                         }else{
                                             return(
-                                                <li className="in">
+                                                <li className="in" key={index}>
                                                     <div className="chat-img">
                                                         <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar1.png" />
                                                     </div>

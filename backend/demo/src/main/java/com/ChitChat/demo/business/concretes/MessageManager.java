@@ -4,6 +4,7 @@ import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
 import com.ChitChat.demo.dto.responses.MessageVM;
 import com.ChitChat.demo.entity.*;
+import com.ChitChat.demo.error.AuthenticationException;
 import com.ChitChat.demo.mapper.ModelMapperService;
 import com.ChitChat.demo.repository.ConversationRepository;
 import com.ChitChat.demo.repository.MessageRepository;
@@ -40,6 +41,17 @@ public class MessageManager implements MessageService {
         var messageToBeMapped = messageRepository.save(message);
         MessageVM response = mapperService.forResponse().map(messageToBeMapped,MessageVM.class);
         return response;
+    }
+
+    @Override
+    public void delete(long messageId, User user) {
+        var message = messageRepository.findById(messageId).orElseThrow();
+
+        if(!message.getUser().equals(user)){
+            throw new AuthenticationException();
+        }
+
+        messageRepository.delete(message);
     }
 
 

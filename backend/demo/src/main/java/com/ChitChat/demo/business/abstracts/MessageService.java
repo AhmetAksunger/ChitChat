@@ -10,4 +10,5 @@ import java.util.List;
 public interface MessageService {
     MessageVM save(CreateMessageRequest createMessageRequest, String senderName);
 
+    void delete(long messageId, User user);
 }

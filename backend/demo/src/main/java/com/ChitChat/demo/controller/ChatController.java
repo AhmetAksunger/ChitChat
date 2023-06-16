@@ -46,10 +46,8 @@ public class ChatController {
         return message;
     }
 
-    /*
-    @PostMapping("/test")
-    public MessageVM a(@RequestBody CreateMessageRequest createMessageRequest,@CurrentUser User sender){
-        return messageService.save(createMessageRequest,sender);
+    @DeleteMapping("/api/v1/messages/{messageId}")
+    public void deleteMessage(@PathVariable long messageId, @CurrentUser User user){
+        messageService.delete(messageId,user);
     }
-     */
 }

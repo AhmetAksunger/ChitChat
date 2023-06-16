@@ -1,12 +1,12 @@
-
 .chat-wrapper {
-  max-height: 500px; /* Set the desired height of the chatbox */
+  max-height: 500px;
   min-height: 500px;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto;
+  white-space: nowrap;
 }
 
 .chat-wrapper::-webkit-scrollbar {
-  width: 8px;
+  display: none;
 }
 
 .chat-wrapper::-webkit-scrollbar-track {
@@ -21,12 +21,15 @@
 .chat-list {
   padding: 0;
   font-size: .8rem;
+  white-space: normal;
 }
 
 .chat-list li {
   margin-bottom: 10px;
   overflow: auto;
   color: #ffffff;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .chat-list .chat-img {
@@ -55,7 +58,6 @@
   margin-right: 70px;
 }
 
-
 .chat-list .chat-message:before {
   content: "";
   position: absolute;
@@ -81,12 +83,14 @@
   margin-left: 20px;
   float: left;
   width: 70%;
+  white-space: normal;
 }
 
 .chat-list .in .chat-message:before {
   left: -12px;
   border-bottom: 20px solid transparent;
   border-right: 20px solid #5a99ee;
+  white-space: normal;
 }
 
 .chat-list .out .chat-img {
@@ -97,16 +101,19 @@
   float: right;
   margin-right: 20px;
   text-align: right;
+  white-space: normal;
 }
 
 .chat-list .out .chat-message {
   background: #fc6d4c;
+  white-space: normal;
 }
 
 .chat-list .out .chat-message:before {
   right: -12px;
   border-bottom: 20px solid transparent;
   border-left: 20px solid #fc6d4c;
+  white-space: normal;
 }
 
 .card .card-header:first-child {
@@ -114,6 +121,7 @@
   -moz-border-radius: 0.3rem 0.3rem 0 0;
   border-radius: 0.3rem 0.3rem 0 0;
 }
+
 .card .card-header {
   background: #17202b;
   border: 0;
@@ -124,12 +132,12 @@
   color: #ffffff;
 }
 
-.content{
+.content {
   padding-left: 0px;
   margin-left: 0px;
-  margin-top:40px;    
+  margin-top: 40px;
 }
 
 .chat-list .chat-message strong {
-  color: whitesmoke; /* Change the text color */
+  color: whitesmoke;
 }
