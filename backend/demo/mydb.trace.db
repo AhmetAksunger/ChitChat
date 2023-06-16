@@ -308,3 +308,6 @@ MESSAGES [42001-214]
 2023-06-14 03:26:21 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]USER_CONVERSATION"; expected "UPDATE, USE"; SQL statement:
 USER_CONVERSATION [42001-214]
+2023-06-16 15:00:00 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'import React, { useState } from ''react''; import ''../css/ChatBox.css'' import... (7344)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]

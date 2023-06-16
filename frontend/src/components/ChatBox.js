@@ -3,7 +3,8 @@ import '../css/ChatBox.css'
 import { getConversationMessages, getPrivateConversationMessages, startConversationWithUser } from '../api/ApiCalls';
 import { useEffect } from 'react';
 import { useRef } from 'react';
-import DropdownDelete from './DropdownDelete';
+import Modal from './Modal';
+import { format } from 'timeago.js';
 const ChatBox = (props) => {
 
     const {window,conversationMessages,authState,loadConversationMessages} = props;
@@ -41,6 +42,7 @@ const ChatBox = (props) => {
           });
         }
       };
+    
       //<h5 class="card-title text-center">You have no conversation started with this user</h5>
       
     if(!exists){
@@ -60,7 +62,7 @@ const ChatBox = (props) => {
                                             <div className='chat-body'>
                                                 <div className='chat-message'>
                                                     <h4>You have no conversation with this user yet</h4>
-                                                    <button onClick={onClickStartConv} className="btn btn-success custom-button" style={{marginBottom:'10px'}}>
+                                                    <button onClick={onClickStartConv} className="btn btn-success custom-button" style={{marginBottom:'10px', marginRight:'30px'}}>
                                                         <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>add_circle</span>
                                                         <span style={{ verticalAlign: 'middle' }}>Start a conversation</span>
                                                     </button>
@@ -80,6 +82,7 @@ const ChatBox = (props) => {
     }
 
     return (
+        <>
         <div className="container content">
             <div className="row">
                 <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -89,22 +92,26 @@ const ChatBox = (props) => {
                             <div class="chat-wrapper">
                                 <ul className="chat-list" ref={chatListRef}>
                                     {messageEntities.map((messageEntity,index) => {
+                                        const formattedTime = format(new Date(messageEntity.timeStamp));
                                         if(messageEntity.user.username === loggedInUser){
                                             return(
+                                                <>
                                                 <li className="out" key={index}>
                                                     <div className="chat-img">
                                                         <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
                                                     </div>
                                                     <div className="chat-body">
-                                                    <div className="chat-message" onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-                                                        <div style={{ display: "flex" }}>
-                                                            {hoveredMessageIndex === index && <span class="material-symbols-outlined " style={{ cursor:'pointer', width: '8px', height: '6px', marginRight: '10px' }}>delete</span>}
-                                                            <strong style={{ fontSize: "1.5rem" , marginLeft:'10px'}}>{messageEntity.user.username}</strong>
-                                                        </div>
-                                                        <p style={{ fontSize: "1.5rem" }}>{messageEntity.message}</p>
+                                                        <div className="chat-message" onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+                                                            <div>
+                                                                {hoveredMessageIndex === index && <span class="material-symbols-outlined " onClick={() => props.onClickDelete(messageEntity)} style={{ cursor:'pointer', width: '8px', height: '6px', marginRight: '10px' }}>delete</span>}
+                                                                <strong style={{ fontSize: "1.5rem" , marginLeft:'10px'}}>{messageEntity.user.username}</strong>
+                                                            </div>
+                                                            <p style={{ fontSize: "1.5rem" }}>{messageEntity.message}</p>
+                                                            <p style={{fontSize: "1rem", color:"black"}}>{formattedTime}</p>
                                                         </div>
                                                     </div>
                                                 </li>
+                                                </>
                                             );
                                         }else{
                                             return(
@@ -116,6 +123,7 @@ const ChatBox = (props) => {
                                                         <div className="chat-message">
                                                             <strong style={{fontSize: "1.5rem"}}>{messageEntity.user.username}</strong>
                                                             <p style={{fontSize: "1.5rem"}}>{messageEntity.message}</p>
+                                                            <p style={{fontSize: "1rem", color:"black"}}>{formattedTime}</p>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -129,7 +137,7 @@ const ChatBox = (props) => {
                 </div>
             </div>
         </div>
-        
+        </>
     );
 };
 

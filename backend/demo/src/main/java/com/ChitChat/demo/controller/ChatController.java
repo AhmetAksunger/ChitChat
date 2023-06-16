@@ -48,6 +48,7 @@ public class ChatController {
 
     @DeleteMapping("/api/v1/messages/{messageId}")
     public void deleteMessage(@PathVariable long messageId, @CurrentUser User user){
+        System.err.println(user.getUsername());
         messageService.delete(messageId,user);
     }
 }

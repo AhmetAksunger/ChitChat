@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import ChatBox from './ChatBox';
 import { getConversationMessages, getMessagedUsers, getPrivateConversationMessages } from '../api/ApiCalls';
 import ConversationList from './ConversationList';
+import Modal from './Modal';
 
 var stompClient = null;
 
@@ -12,6 +13,8 @@ const ChatRoom = (props) => {
     const {token,user} = props.authState;
     const {username} = user;
     
+    const [modalVisible, setModalVisible] = useState(false);
+
     const [userData,setUserData] = useState({
         receiverName: "",
         connected: false,
@@ -33,6 +36,13 @@ const ChatRoom = (props) => {
     const [newMessagesCount, setNewMessagesCount] = useState({});
 
     const [messagedUsers, setMessagedUsers] = useState([]);
+
+    const [messageEntityToBeDeleted,setMessageEntityToBeDeleted] = useState({
+        id: 0,
+        message: "",
+        conversationId: 0,
+        user: {username: ""}
+    });
 
     const loadMessagedUsers = async () => {
         try {
@@ -105,6 +115,8 @@ const ChatRoom = (props) => {
         let payloadData = JSON.parse(payload.body);
         const {conversationId, user} = payloadData;
         
+        loadMessagedUsers();
+
         if(chatWindow === user.username){
             loadConversationMessages(conversationId);
         }else if(user.username === username){
@@ -200,8 +212,19 @@ const ChatRoom = (props) => {
             console.log(error);
         }
     }
+    
+    //Modal
+    const onClickDelete = (messageEntity) => {
+        setMessageEntityToBeDeleted(messageEntity);
+        setModalVisible(true);
+    }
+    const onClickCancel = () => {
+        setModalVisible(false);
+    }
+
 
     return (
+        <>
         <div className='container'>
         {userData.connected && (
             <div className='row'>
@@ -217,20 +240,24 @@ const ChatRoom = (props) => {
                 </div>
                 <div className='col-md-5'>
                     <div className='container'>
-                        <ChatBox authState={props.authState} window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages} loadConversationMessages={loadConversationMessages}/>
+                        <ChatBox authState={props.authState} window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages} loadConversationMessages={loadConversationMessages} 
+                        onClickDelete={onClickDelete}
+                        />
                         <div>
-                            <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px'}}/>
-                            <span class="material-symbols-outlined" onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>
+                            <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}}/>
+                     {  /*     <span class="material-symbols-outlined" onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>
                             send
-                            </span>    
+    </span>  */
+    }
+                        <button className='btn btn-success' onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>Send</button>  
                         </div>
                     </div>
                 </div>
-
             </div>
         )}
         </div>
-
+        <Modal authState={props.authState} setModalVisibility={setModalVisible} visible={modalVisible} messageEntity={messageEntityToBeDeleted} onClickCancel={onClickCancel} loadConversationMessages={loadConversationMessages}/>
+        </>
     );
 };
 

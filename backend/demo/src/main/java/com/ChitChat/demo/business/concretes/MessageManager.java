@@ -47,7 +47,7 @@ public class MessageManager implements MessageService {
     public void delete(long messageId, User user) {
         var message = messageRepository.findById(messageId).orElseThrow();
 
-        if(!message.getUser().equals(user)){
+        if(message.getUser().getId() != user.getId()){
             throw new AuthenticationException();
         }
 

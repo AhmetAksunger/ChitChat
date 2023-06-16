@@ -48,3 +48,13 @@ export const getMessagedUsers = (token) => {
   };
   return axios.get("http://localhost:8080/api/v1/conversations/messaged-participants",config)
 };
+
+export const deleteMessage = (token, messageId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  return axios.delete(`http://localhost:8080/api/v1/messages/${messageId}`,config);
+}
