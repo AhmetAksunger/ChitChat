@@ -1,6 +1,7 @@
 package com.ChitChat.demo.controller;
 
 import com.ChitChat.demo.business.abstracts.UserService;
+import com.ChitChat.demo.dto.requests.UserRegisterRequest;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.User;
 import com.ChitChat.demo.security.CurrentUser;
@@ -8,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +29,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers(user));
     }
 
-
+    @PostMapping("/api/v1/users")
+    public void save(@RequestBody @Validated UserRegisterRequest userRegisterRequest){
+        userService.save(userRegisterRequest);
+    }
 }

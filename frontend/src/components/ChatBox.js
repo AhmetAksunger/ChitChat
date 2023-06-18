@@ -54,22 +54,24 @@ const ChatBox = (props) => {
                             <div className="card-header text-center" style={{fontSize: "2rem"}}>{window}</div>
                             <div className="card-body height3 d-flex flex-column align-items-center">
                                 <div className='text-center'>
-                                    <ul className='chat-list'>
-                                        <li className='out'>
-                                            <div className="chat-img">
-                                                <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
-                                            </div>
-                                            <div className='chat-body'>
-                                                <div className='chat-message'>
-                                                    <h4>You have no conversation with this user yet</h4>
-                                                    <button onClick={onClickStartConv} className="btn btn-success custom-button" style={{marginBottom:'10px', marginRight:'30px'}}>
-                                                        <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>add_circle</span>
-                                                        <span style={{ verticalAlign: 'middle' }}>Start a conversation</span>
-                                                    </button>
+                                    <div className='chat-wrapper'>
+                                        <ul className='chat-list'>
+                                            <li className='out'>
+                                                <div className="chat-img">
+                                                    <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                                <div className='chat-body'>
+                                                    <div className='chat-message'>
+                                                        <h4>You have no conversation with this user yet</h4>
+                                                        <button onClick={onClickStartConv} className="btn btn-success custom-button" style={{marginBottom:'10px', marginRight:'30px'}}>
+                                                            <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>add_circle</span>
+                                                            <span style={{ verticalAlign: 'middle' }}>Start a conversation</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
-import ChatBox from './ChatBox';
+import ChatBox from '../components/ChatBox';
 import { getConversationMessages, getMessagedUsers, getPrivateConversationMessages } from '../api/ApiCalls';
-import ConversationList from './ConversationList';
-import Modal from './Modal';
+import ConversationList from '../components/ConversationList';
+import Modal from '../components/Modal';
 
 var stompClient = null;
 

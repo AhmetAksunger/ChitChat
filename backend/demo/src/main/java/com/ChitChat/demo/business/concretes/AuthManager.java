@@ -2,6 +2,7 @@ package com.ChitChat.demo.business.concretes;
 
 import com.ChitChat.demo.business.abstracts.AuthService;
 import com.ChitChat.demo.dto.requests.CredentialsRequest;
+import com.ChitChat.demo.dto.requests.UserRegisterRequest;
 import com.ChitChat.demo.dto.responses.AuthResponse;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.Token;
@@ -70,6 +71,7 @@ public class AuthManager implements AuthService {
         }
         return optionalToken.get().getUser();
     }
+
     private String generateRandomToken(){
         return UUID.randomUUID().toString().replaceAll("-","");
     }

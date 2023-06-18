@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { login } from '../api/ApiCalls';
-import { loginSuccess } from '../redux/authActions';
-import { useHistory, withRouter } from 'react-router-dom/cjs/react-router-dom.min';
-
+import { Link, useHistory, withRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import chitChat from "../assets/chitchat.png";
 
 const Login = (props) => {
     
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");
+
+    const [error,setError] = useState({
+      message:""
+    });
 
     const onClickLogin = async () => {
         const creds = {
@@ -18,27 +21,40 @@ const Login = (props) => {
             const response = await login(creds);
             const authState = {
                 token: response.data.token,
-                user: response.data.user
+                user: response.data.user,
+                isLoggedIn: true
             }
             props.onLoginSuccess(authState);
             props.history.push("/chatroom")
         } catch (error) {
-            console.log(error);
+          setError(error.response.data);
         }
     }
 
     return (
-        <div className='container'>
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" class="form-control" placeholder="Username" onChange={(event) => {setUsername(event.target.value)}}/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-control" placeholder="Password" onChange={(event) => {setPassword(event.target.value)}}/>
-            </div>
-            <button className='btn btn-primary' onClick={onClickLogin}>Login</button>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div>
+        <img src={chitChat} width="400px"/>
+        <div style={{ marginBottom: '15px', width: '500px' }}>
+          <label className="form-label" style={{fontSize:"2rem",color:"purple"}}>Username</label>
+          <input type="text" className="form-control" placeholder="Username" onChange={(event) => { setUsername(event.target.value); setError({message:""}) }} />
         </div>
+        <div style={{ marginBottom: '15px', width: '500px' }}>
+          <label className="form-label" style={{fontSize:"2rem",color:"purple"}}>Password</label>
+          <input type="password" className="form-control" placeholder="Password" onChange={(event) => { setPassword(event.target.value); setError({message:""}) }} />
+        </div>
+        {error.message && 
+        <div class="text-white text-center" style={{height:"30px",backgroundColor:"red",margin:'5px',marginLeft:'0px',marginRight:'0px'}}>
+        {error.message}
+        </div>
+        }
+        <div>
+          <button className='btn btn-info' onClick={onClickLogin}>Login</button>
+          <Link className='btn btn-primary' to="/register">Register</Link>
+        </div>
+      </div>
+    </div>
+
     );
 };
 

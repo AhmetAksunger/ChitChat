@@ -58,3 +58,12 @@ export const deleteMessage = (token, messageId) => {
 
   return axios.delete(`http://localhost:8080/api/v1/messages/${messageId}`,config);
 }
+
+export const register = (creds) => {
+  const config = {
+    headers: {
+      'Accept-Language': 'en-US'
+    }
+  };
+  return axios.post("http://localhost:8080/api/v1/users",creds,config);
+}
