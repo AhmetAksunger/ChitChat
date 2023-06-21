@@ -22,14 +22,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ValidationErrorResponse> handleException(HttpServletRequest request,MethodArgumentNotValidException exception){
+    @ExceptionHandler({MethodArgumentNotValidException.class, UsernameAlreadyExistsException.class})
+    public ResponseEntity<ValidationErrorResponse> handleException(HttpServletRequest request,Exception exception){
         ValidationErrorResponse error = new ValidationErrorResponse();
         HashMap<String, String> errorMessages = new HashMap<>();
-        BindingResult bindingResult = exception.getBindingResult();
-        for (FieldError fieldError: bindingResult.getFieldErrors()) {
-            errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+
+        if(exception instanceof MethodArgumentNotValidException){
+            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) exception;
+
+            BindingResult bindingResult = ex.getBindingResult();
+            for (FieldError fieldError: bindingResult.getFieldErrors()) {
+                errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
         }
+
+        if(exception instanceof UsernameAlreadyExistsException){
+            UsernameAlreadyExistsException ex = (UsernameAlreadyExistsException) exception;
+            errorMessages.put(ex.getKey(),ex.getErrorMessage());
+        }
+
         error.setPath(request.getRequestURI());
         error.setMessages(errorMessages);
         error.setTimeStamp(new Date());
@@ -37,7 +48,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request,PasswordMismatchException exception){
+    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request,PasswordException exception){
         String apiPath = request.getRequestURI();
         ErrorResponse response = new ErrorResponse();
         response.setPath(apiPath);
@@ -46,4 +57,5 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response,HttpStatus.CONFLICT);
     }
+
 }

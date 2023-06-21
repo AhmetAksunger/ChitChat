@@ -22,6 +22,14 @@ public class ImageManager implements ImageService {
 
         try {
             if(!image.isEmpty()){
+
+                String fileType = image.getContentType();
+
+                if (!fileType.equals("image/jpeg") && !fileType.equals("image/jpg") && !fileType.equals("image/png")) {
+                    // The file is not a JPEG, JPG, or PNG image
+                    // ...
+                }
+
                 Image imageEntity = new Image();
                 imageEntity.setUser(user);
                 imageEntity.setImageData(Base64.getEncoder().encodeToString(image.getBytes()));
