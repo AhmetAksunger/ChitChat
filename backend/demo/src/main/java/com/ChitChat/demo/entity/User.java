@@ -26,6 +26,11 @@ public class User implements UserDetails {
 
     private String password;
 
+    private boolean isEnabled = true;
+
+    @OneToOne
+    private Image profileImage;
+
     @ManyToMany(mappedBy = "participants")
     private List<Conversation> conversations;
 
@@ -61,6 +66,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }

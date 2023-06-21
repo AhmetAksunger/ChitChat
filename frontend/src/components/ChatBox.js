@@ -46,6 +46,11 @@ const ChatBox = (props) => {
       //<h5 class="card-title text-center">You have no conversation started with this user</h5>
       
     if(!exists){
+        const base64Image = user.profileImage;
+        let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png"
+        if(base64Image){
+            imageSource = `data:image/jpeg;base64,${base64Image}`;
+        }
         return(
             <div className='container content'>
                 <div className='row'>
@@ -58,7 +63,7 @@ const ChatBox = (props) => {
                                         <ul className='chat-list'>
                                             <li className='out'>
                                                 <div className="chat-img">
-                                                    <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
+                                                    <img alt="Avatar" src={imageSource} width='32px' height='48px' />
                                                 </div>
                                                 <div className='chat-body'>
                                                     <div className='chat-message'>
@@ -96,11 +101,16 @@ const ChatBox = (props) => {
                                     {messageEntities.map((messageEntity,index) => {
                                         const formattedTime = format(new Date(messageEntity.timeStamp));
                                         if(messageEntity.user.username === loggedInUser){
+                                            const base64Image = messageEntity.user.profileImage;
+                                            let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png"
+                                            if(base64Image){
+                                                imageSource = `data:image/jpeg;base64,${base64Image}`;
+                                            }
                                             return(
                                                 <>
                                                 <li className="out" key={index}>
                                                     <div className="chat-img">
-                                                        <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
+                                                        <img alt="Avtar" src={imageSource} width='32px' height='48px'/>
                                                     </div>
                                                     <div className="chat-body">
                                                         <div className="chat-message" onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
@@ -116,10 +126,15 @@ const ChatBox = (props) => {
                                                 </>
                                             );
                                         }else{
+                                            const base64Image = messageEntity.user.profileImage;
+                                            let imageSource = "https://bootdey.com/img/Content/avatar/avatar1.png"
+                                            if(base64Image){
+                                                imageSource = `data:image/jpeg;base64,${base64Image}`;
+                                            }
                                             return(
                                                 <li className="in" key={index}>
                                                     <div className="chat-img">
-                                                        <img alt="Avtar" src="https://bootdey.com/img/Content/avatar/avatar1.png" />
+                                                        <img alt="Avtar" src={imageSource} width='32px' height='48px'/>
                                                     </div>
                                                     <div className="chat-body">
                                                         <div className="chat-message">

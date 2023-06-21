@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetMessagedUsersResponse {
+
     private String username;
+    private String profileImage;
 }

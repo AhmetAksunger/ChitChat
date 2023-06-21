@@ -67,3 +67,22 @@ export const register = (creds) => {
   };
   return axios.post("http://localhost:8080/api/v1/users",creds,config);
 }
+
+export const updateUser = (userId, body, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+  return axios.put(`http://localhost:8080/api/v1/users/${userId}`,body,config);
+}
+
+export const saveProfileImage = (file, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  return axios.post("http://localhost:8080/api/v1/images", file, config);
+}

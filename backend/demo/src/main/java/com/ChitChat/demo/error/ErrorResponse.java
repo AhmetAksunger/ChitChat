@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class ErrorResponse {
 
@@ -18,5 +17,9 @@ public class ErrorResponse {
     private String path;
 
     private Date timeStamp;
+
+    public ErrorResponse(){
+        this.timeStamp = new Date();
+    }
 
 }

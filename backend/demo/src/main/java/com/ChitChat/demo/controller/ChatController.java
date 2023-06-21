@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,13 +33,13 @@ public class ChatController {
     private TokenRepository tokenRepository;
     @MessageMapping("/message") // /app/message
     @SendTo("/chatroom/public")
-    public MessageVM receivePublicMessage(@Payload CreateMessageRequest createMessageRequest) {
+    public MessageVM receivePublicMessage(@Payload @Validated CreateMessageRequest createMessageRequest) {
 
         return messageService.save(createMessageRequest, createMessageRequest.getSenderName());
     }
 
     @MessageMapping("/private-message")
-    public MessageVM receivePrivateMessage(@Payload CreateMessageRequest createMessageRequest){
+    public MessageVM receivePrivateMessage(@Payload @Validated CreateMessageRequest createMessageRequest){
         MessageVM message = messageService.save(createMessageRequest,createMessageRequest.getSenderName());
         messagingTemplate.convertAndSendToUser(createMessageRequest.getReceiverName(),"/private",message); // /user/{username}/private
         messagingTemplate.convertAndSendToUser(createMessageRequest.getSenderName(),"/private",message); // /user/{username}/private

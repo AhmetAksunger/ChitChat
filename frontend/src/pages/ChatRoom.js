@@ -222,7 +222,6 @@ const ChatRoom = (props) => {
         setModalVisible(false);
     }
 
-
     return (
         <>
         <div className='container'>
@@ -245,11 +244,8 @@ const ChatRoom = (props) => {
                         />
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}}/>
-                     {  /*     <span class="material-symbols-outlined" onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>
-                            send
-    </span>  */
-    }
-                        <button className='btn btn-success' onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>Send</button>  
+     
+                            <button className='btn btn-success' onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>Send</button>  
                         </div>
                     </div>
                 </div>

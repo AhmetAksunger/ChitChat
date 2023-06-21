@@ -2,8 +2,11 @@ package com.ChitChat.demo.business.concretes;
 
 import com.ChitChat.demo.business.abstracts.UserService;
 import com.ChitChat.demo.dto.requests.UserRegisterRequest;
+import com.ChitChat.demo.dto.requests.UserUpdateRequest;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.error.PasswordMismatchException;
+import com.ChitChat.demo.repository.TokenRepository;
 import com.ChitChat.demo.repository.UserRepository;
 import com.ChitChat.demo.mapper.ModelMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,8 @@ public class UserManager implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenRepository tokenRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
@@ -48,10 +54,38 @@ public class UserManager implements UserService {
         List<User> users = userRepository.findByUsernameNot(loggedInUser.getUsername());
         List<UserVM> responses = new ArrayList<>();
         for (User user:users) {
-            var response =mapperService.forResponse().map(user, UserVM.class);
+            var response = mapperService.forResponse().map(user, UserVM.class);
+            if(user.getProfileImage() != null){
+                response.setProfileImage(user.getProfileImage().getImageData());
+            }
             responses.add(response);
         }
         return responses;
+    }
+
+    @Override
+    @Transactional
+    public void update(UserUpdateRequest userUpdateRequest, long id) {
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        // if user wants to change its password
+        if(userUpdateRequest.getNewPassword() != null){
+            boolean matches = passwordEncoder.matches(userUpdateRequest.getOldPassword(), user.getPassword());
+            if(!matches){
+                throw new PasswordMismatchException();
+            }
+            //if matches
+            tokenRepository.deleteByUserId(id);
+            user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
+
+        }
+
+        if(userUpdateRequest.getUsername() != null){
+            user.setUsername(userUpdateRequest.getUsername());
+        }
+
+        userRepository.save(user);
     }
 
 

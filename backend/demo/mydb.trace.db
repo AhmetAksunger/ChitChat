@@ -382,3 +382,18 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:108)
 	at java.base/java.lang.Thread.run(Thread.java:1589)
+2023-06-19 08:49:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "IMAGE_DATA BINARY VARYING(255)": "X'ffd8ffe000104a46494600010100000100010000ffdb0043000302020302020303030304030304... (49570)"; SQL statement:
+insert into images (id, image_data, name) values (default, ?, ?) [22001-214]
+2023-06-19 11:36:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "IMAGE_DATA CHARACTER VARYING(2048)": "'/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCws... (66096)"; SQL statement:
+insert into images (id, image_data, name) values (default, ?, ?) [22001-214]
+2023-06-19 11:37:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "IMAGE_DATA CHARACTER VARYING(2048)": "'iVBORw0KGgoAAAANSUhEUgAABvcAAAKZCAYAAACMWHcTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv... (26376)"; SQL statement:
+insert into images (id, image_data, name) values (default, ?, ?) [22001-214]
+2023-06-19 11:39:46 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "IMAGE_DATA CHARACTER VARYING(30000)": "'iVBORw0KGgoAAAANSUhEUgAAAs0AAANfCAYAAAAiluB9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv... (81352)"; SQL statement:
+insert into images (id, image_data, name) values (default, ?, ?) [22001-214]
+2023-06-19 11:40:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "IMAGE_DATA CHARACTER VARYING(30000)": "'iVBORw0KGgoAAAANSUhEUgAACVwAAAVACAIAAAAx7JbNAACAAElEQVR42sy7dVCdTRMv2Li7u9uBg7u... (548340)"; SQL statement:
+insert into images (id, image_data, name) values (default, ?, ?) [22001-214]

@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserVM {
 
+    private long id;
     private String username;
+    private String profileImage;
 }

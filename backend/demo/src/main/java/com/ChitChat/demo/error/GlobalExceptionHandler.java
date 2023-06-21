@@ -35,4 +35,15 @@ public class GlobalExceptionHandler {
         error.setTimeStamp(new Date());
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request,PasswordMismatchException exception){
+        String apiPath = request.getRequestURI();
+        ErrorResponse response = new ErrorResponse();
+        response.setPath(apiPath);
+        response.setStatus(HttpStatus.CONFLICT.value());
+        response.setMessage(exception.getMessage());
+
+        return new ResponseEntity<>(response,HttpStatus.CONFLICT);
+    }
 }

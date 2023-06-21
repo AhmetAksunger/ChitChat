@@ -32,12 +32,17 @@ const UserList = (props) => {
 
     return (
         <>
-        {users.map((username,index) => {
+        {users.map((user,index) => {
+            const base64Image = user.profileImage;
+            let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png"
+            if(base64Image){
+                imageSource = `data:image/jpeg;base64,${base64Image}`;
+            }
             return(
-            <li className="clearfix" onClick={() => {props.onClickUser(username.username)}}>
-                {/*<img src={} alt="avatar" width={'32px'}/>*/}
+            <li className="clearfix" onClick={() => {props.onClickUser(user.username)}}>
+                <img src={imageSource} alt="avatar" width='32px' height='32px' style={{borderRadius: '50%'}}/>
                 <div className="about">
-                    <div className="name">{username.username}</div>
+                    <div className="name">{user.username}</div>
                 </div>
             </li>
             );

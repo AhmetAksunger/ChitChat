@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.PUT,"/api/v1/users/{username}").authenticated()
+                //.requestMatchers(HttpMethod.PUT,"/api/v1/users/{username}").authenticated()
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest().permitAll();
