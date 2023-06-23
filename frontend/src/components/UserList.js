@@ -4,7 +4,6 @@ import { getUsers } from '../api/ApiCalls';
 const UserList = (props) => {
     
     const {token} = props.authState;
-
 /*
     const [page,setPage] = useState({
         content: [],
@@ -29,24 +28,42 @@ const UserList = (props) => {
         }
     }    
     
-
     return (
         <>
-        {users.map((user,index) => {
-            const base64Image = user.profileImage;
-            let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png"
-            if(base64Image){
+            {props.searchedUsers.length !== 0 ? (
+            props.searchedUsers.map((user, index) => {
+                const base64Image = user.profileImage;
+                let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png";
+                if (base64Image) {
                 imageSource = `data:image/jpeg;base64,${base64Image}`;
-            }
-            return(
-            <li className="clearfix" onClick={() => {props.onClickUser(user.username)}}>
-                <img src={imageSource} alt="avatar" width='32px' height='32px' style={{borderRadius: '50%'}}/>
-                <div className="about">
+                }
+                return (
+                <li className="clearfix" onClick={() => {props.onClickUser(user.username)}}>
+                    <img src={imageSource} alt="avatar" width='32px' height='32px' style={{borderRadius: '50%'}}/>
+                    <div className="about">
                     <div className="name">{user.username}</div>
-                </div>
-            </li>
-            );
-        })}
+                    </div>
+                </li>
+                );
+            })
+            ) : (
+            users.map((user, index) => {
+                const base64Image = user.profileImage;
+                let imageSource = "https://bootdey.com/img/Content/avatar/avatar6.png";
+                if (base64Image) {
+                imageSource = `data:image/jpeg;base64,${base64Image}`;
+                }
+                return (
+                <li className="clearfix" onClick={() => {props.onClickUser(user.username)}}>
+                    <img src={imageSource} alt="avatar" width='32px' height='32px' style={{borderRadius: '50%'}}/>
+                    <div className="about">
+                    <div className="name">{user.username}</div>
+                    </div>
+                </li>
+                );
+            })
+            )}
+
         </>
     );
 };

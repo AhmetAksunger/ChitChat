@@ -13,13 +13,22 @@ export const getUsers = (pageable = true,token,page = 0, size = 5) => {
     return axios.get(`http://localhost:8080/api/v1/users?pageable=${pageable}&page=${page}&size=${size}`,config);
 }
 
-export const getPublicConversations = () => {
-
-    return axios.get("http://localhost:8080/api/v1/conversations/public");
+export const getPublicConversations = (token) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return axios.get("http://localhost:8080/api/v1/conversations/public",config);
 }
 
-export const getConversationMessages = (conversationId) => {
-    return axios.get(`http://localhost:8080/api/v1/conversations/${conversationId}/messages`);
+export const getConversationMessages = (conversationId,token) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return axios.get(`http://localhost:8080/api/v1/conversations/${conversationId}/messages`,config);
 }
 
 export const getPrivateConversationMessages = (username,token) => {
@@ -85,4 +94,24 @@ export const saveProfileImage = (file, token) => {
   };
 
   return axios.post("http://localhost:8080/api/v1/images", file, config);
+}
+
+export const getUser = (userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  return axios.get(`http://localhost:8080/api/v1/users/${userId}`,config);
+}
+
+export const searchUsersLike = (input,token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  return axios.get(`http://localhost:8080/api/v1/users?pageable=false&like=${input}`,config);
 }

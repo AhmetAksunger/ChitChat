@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { login } from '../api/ApiCalls';
 import { Link, useHistory, withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import chitChat from "../assets/chitchat.png";
+import "../css/Loader.css";
+import { useApiProgress } from '../shared/ApiProgress';
+import ButtonWithProgress from '../components/ButtonWithProgress';
 
 const Login = (props) => {
     
@@ -11,6 +14,8 @@ const Login = (props) => {
     const [error,setError] = useState({
       message:""
     });
+
+    const pendingApiCall = useApiProgress("post","http://localhost:8080/api/v1/auth");
 
     const onClickLogin = async () => {
         const creds = {
@@ -27,7 +32,9 @@ const Login = (props) => {
             props.onLoginSuccess(authState);
             props.history.push("/chatroom")
         } catch (error) {
-          setError(error.response.data);
+          if(error.response.data){
+            setError(error.response.data);
+          }
         }
     }
 
@@ -49,7 +56,7 @@ const Login = (props) => {
         </div>
         }
         <div>
-          <button className='btn btn-info' onClick={onClickLogin}>Login</button>
+          <ButtonWithProgress className={"btn btn-info"} onClickMethod={onClickLogin} pendingApiCall={pendingApiCall} buttonText={"Login"} />
           <Link className='btn btn-primary' to="/register">Register</Link>
         </div>
       </div>

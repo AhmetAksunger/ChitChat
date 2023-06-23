@@ -3,6 +3,7 @@ package com.ChitChat.demo.business.concretes;
 import com.ChitChat.demo.business.abstracts.ImageService;
 import com.ChitChat.demo.entity.Image;
 import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.error.InvalidImageFileTypeException;
 import com.ChitChat.demo.repository.ImageRepository;
 import com.ChitChat.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ImageManager implements ImageService {
 
                 if (!fileType.equals("image/jpeg") && !fileType.equals("image/jpg") && !fileType.equals("image/png")) {
                     // The file is not a JPEG, JPG, or PNG image
-                    // ...
+                    throw new InvalidImageFileTypeException();
                 }
 
                 Image imageEntity = new Image();
@@ -38,7 +39,7 @@ public class ImageManager implements ImageService {
                 userRepository.save(user);
             }
         }catch (Exception ex){
-            System.err.println(ex.getMessage());
+            throw new InvalidImageFileTypeException();
         }
     }
 }

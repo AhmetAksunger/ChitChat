@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 
@@ -36,15 +37,19 @@ public class SecurityConfiguration {
 
 
         http
+                .httpBasic().disable()
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                //.requestMatchers(HttpMethod.PUT,"/api/v1/users/{username}").authenticated()
+                .requestMatchers(HttpMethod.POST,"/api/v1/auth").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll()
+                .requestMatchers("/api/v1/**").authenticated()
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest().permitAll();
         http.httpBasic(Customizer.withDefaults());
 
+        http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

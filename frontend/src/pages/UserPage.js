@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { saveProfileImage, updateUser } from '../api/ApiCalls';
+import { getUser, saveProfileImage, updateUser } from '../api/ApiCalls';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import { useApiProgress } from '../shared/ApiProgress';
+import ButtonWithProgress from '../components/ButtonWithProgress';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
+
 const UserPage = (props) => {
 
+    const defaultImage = "https://bootdey.com/img/Content/avatar/avatar6.png"
     const {authState} = props;
     const {token,user} = authState;
 
     const [showPasswordModal, setShowPasswordModal] = useState(false);
 
+    const [currentUsername,setCurrentUsername] = useState();
+
     const [newUsername,setNewUsername] = useState();
     const [oldPassword,setOldPassword] = useState();
     const [newPassword,setNewPassword] = useState();
-    const [newImage,setNewImage] = useState("https://bootdey.com/img/Content/avatar/avatar6.png");
+    const [newImage,setNewImage] = useState(defaultImage);
     const [imageAsFile,setImageAsFile] = useState();
+
+    const pendingApiCall = useApiProgress('put',`http://localhost:8080/api/v1/users/${user.id}`,true);
 
     const [errors,setErrors] = useState({
         username:"",
@@ -21,17 +30,40 @@ const UserPage = (props) => {
 
     });
 
-    useEffect(() => {
-        if (user.profileImage) {
-          setNewImage(`data:image/jpeg;base64,${user.profileImage}`);
+    const loadUser = async () => {
+        try {
+            const response = await getUser(user.id,token);
+            setCurrentUsername(response.data.username);
+            if(response.data.profileImage){
+                setNewImage(`data:image/jpeg;base64,${response.data.profileImage}`);
+            }
+        } catch (error) {
+            
         }
-      }, [user.profileImage]);
+        
+    }
+
+    useEffect(() => {
+        loadUser();
+    },[]);
+
 
     const uploadFile = async (file) => {
         const attachment = new FormData();
         attachment.append('file',file);
         console.log(props.authState.token);
-        const response = await saveProfileImage(attachment,token);
+        try {
+            const response = await saveProfileImage(attachment,token);            
+        } catch (error) {
+            setErrors((previousState) => {
+                return(
+                    {
+                        ...previousState,
+                        image: error.response.data.messages.image
+                    }
+                )
+            });
+        }
     }
 
     const onChangeFile = (event) => {
@@ -59,7 +91,14 @@ const UserPage = (props) => {
         }
         try {
             await updateUser(user.id,body,token);
-            
+            if(newUsername){
+                props.onLoginSuccess({
+                    user:"",
+                    token:"",
+                    isLoggedIn: false
+                  });
+                props.history.push("/login");
+            }
         } catch (error) {
             setErrors((previousState) => {
                 return(
@@ -72,7 +111,7 @@ const UserPage = (props) => {
             });
         }
 
-    }
+    };
 
     const onClickSavePassword = async () => {
         const body = {
@@ -81,9 +120,15 @@ const UserPage = (props) => {
         }
         try {
             await updateUser(user.id,body,token);
+            props.onLoginSuccess({
+                user:"",
+                token:"",
+                isLoggedIn: false
+              });
             props.history.push("/login");
             
         } catch (error) {
+            console.log(error);
             let exception = undefined;
             if(error.response.data.messages){
                 exception = error.response.data.messages.newPassword;
@@ -108,7 +153,7 @@ const UserPage = (props) => {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <div className="modal" style={{height:"700px"}}>
                 <img src={newImage} width='256px' height='256px' style={{borderRadius: '50%', marginBottom:"10px"}}/>
-                <p className="message">{user.username}</p>
+                <p className="message">{currentUsername}</p>
       
                 <label style={{ fontSize: '2rem', color: 'purple'}}>New Username</label>
                 <input type="text" className="form-control" onChange={(event) => setNewUsername(event.target.value)} style={{ width: '500px'}} />
@@ -122,8 +167,8 @@ const UserPage = (props) => {
 
                 <a style={{marginTop:"10px",cursor:"pointer"}} onClick={() => setShowPasswordModal(true)}>Want to change your password?</a>
                 <div className="options" style={{marginTop:"20px"}}>
-                <button className='btn btn-success' onClick={onClickSave}>Save</button>
-                <button className='btn btn-danger'>Cancel</button>
+                    <ButtonWithProgress onClickMethod={onClickSave} pendingApiCall={pendingApiCall} buttonText={"Save"} className={"btn btn-success"}/>
+                    <Link className='btn btn-danger' to="/chatroom">Cancel</Link>
                 </div>
             </div>
         </div>
@@ -140,7 +185,7 @@ const UserPage = (props) => {
 
                     <div className="options" style={{marginTop:"20px"}}>
 
-                    <button className='btn btn-success' onClick={onClickSavePassword}>Save</button>
+                    <ButtonWithProgress onClickMethod={onClickSavePassword} pendingApiCall={pendingApiCall} buttonText={"Save"} className={"btn btn-success"}/>
                     <button className='btn btn-danger' onClick={() => setShowPasswordModal(false)}>Cancel</button>
                     </div>
                 </div>

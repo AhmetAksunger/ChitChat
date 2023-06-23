@@ -3,6 +3,7 @@ package com.ChitChat.demo.business.concretes;
 import com.ChitChat.demo.business.abstracts.UserService;
 import com.ChitChat.demo.dto.requests.UserRegisterRequest;
 import com.ChitChat.demo.dto.requests.UserUpdateRequest;
+import com.ChitChat.demo.dto.responses.GetUserResponse;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.User;
 import com.ChitChat.demo.error.PasswordMismatchException;
@@ -104,6 +105,31 @@ public class UserManager implements UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    public GetUserResponse getUser(long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        GetUserResponse response = new GetUserResponse();
+        response.setUsername(user.getUsername());
+        if(user.getProfileImage() != null){
+            response.setProfileImage(user.getProfileImage().getImageData());
+        }
+        return response;
+    }
+
+    @Override
+    public List<UserVM> getUsersLike(String input) {
+        List<User> users = userRepository.findAllByUsernameContainingIgnoreCase(input);
+        List<UserVM> responses = new ArrayList<>();
+        for (User user:users) {
+            var response = mapperService.forResponse().map(user, UserVM.class);
+            if(user.getProfileImage() != null){
+                response.setProfileImage(user.getProfileImage().getImageData());
+            }
+            responses.add(response);
+        }
+        return responses;
     }
 
 

@@ -3,13 +3,16 @@ import "../css/ChatList.css"
 import publicChatLogo from "../assets/meeting.png"
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { getPublicConversations } from '../api/ApiCalls';
+import { getPublicConversations, searchUsersLike } from '../api/ApiCalls';
 import UserList from './UserList';
 import MessagedUserList from './MessagedUserList';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 const ConversationList = (props) => {
 
     const [publicConversations, setPublicConversations] = useState([]);
+    const [searchInput,setSearchInput] = useState();
+    const [searchedUsers,setSearchedUsers] = useState([]);
 
     const {newMessagesCount} = props;
 
@@ -19,7 +22,7 @@ const ConversationList = (props) => {
 
     const loadPublicConversations = async () => {
         try {
-            const response = await getPublicConversations();
+            const response = await getPublicConversations(props.authState.token);
             setPublicConversations(response.data);
         } catch (error) {
             
@@ -31,16 +34,43 @@ const ConversationList = (props) => {
         props.onClickPublicChat(conversationId);
     }
 
+    const onClickSearch = async () => {
+        try {
+            const response = await searchUsersLike(searchInput,props.authState.token);
+            setSearchedUsers(response.data);
+        } catch (error) {
+            
+        }
+        
+    }
+
     return (
+        <>
         <div className='container-people'>
             <div className="people-list" id="people-list">
+                <div style={{ display: 'flex', alignItems: 'center', color: 'white', textDecoration: 'none' }}>
+                    <Link to="/profile" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', textDecoration: 'none' }}>
+                        <span className='material-symbols-outlined' style={{ marginRight: '5px', fontSize: '32px' }}>
+                        person
+                        </span>
+                        <p style={{ margin: '0', fontSize: '16px' }}>My Profile</p>
+                    </Link>
+                    <Link to="/logout" style={{ marginLeft: '160px', marginTop:"5px", textDecoration: 'none' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '24px', cursor: 'pointer' }}>
+                        logout
+                        </span>
+                    </Link>
+                </div>
                 <div className="search">
                     <p>Search</p>
-                    <input type="text" placeholder="search" />
+                    <input type="text" placeholder="search" onChange={(event) => setSearchInput(event.target.value)}/>
+                    <span class="material-symbols-outlined" style={{cursor:"pointer"}} onClick={onClickSearch}>
+                    search
+                    </span>
                 </div>
-                <hr />
                 <div className='scroll'>
-                    <ul className="list">
+                    <ul className="list" style={{marginBottom:"0px", paddingBottom:"0px"}}>
+                    <hr />
                         {publicConversations.map((chat,index) => {
                             return(
                             <li className="clearfix" onClick={() => {handleConversationClick(chat.id)}}>
@@ -52,24 +82,25 @@ const ConversationList = (props) => {
                             </li>
                         );
                         })}
-                        
-                    </ul>
                     <hr />
+                    </ul>
                     <div className="search">
                         <p className='title'>Chats</p>
                     </div>
-                    <ul className="list">
+                    <ul className="list" style={{marginBottom:"0px", paddingBottom:"0px"}}>
                         <MessagedUserList newMessagesCount={newMessagesCount} authState={props.authState} messagedUsers={props.messagedUsers} onClickUser={props.onClickUser}/>
+                    <hr />
                     </ul>
                     <div className="search">
                         <p className='title'>All Users</p>
                     </div>
                     <ul className="list">
-                        <UserList authState={props.authState} onClickUser={props.onClickUser}/>                    
+                        <UserList authState={props.authState} onClickUser={props.onClickUser} searchedUsers={searchedUsers}/>                    
                     </ul>
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

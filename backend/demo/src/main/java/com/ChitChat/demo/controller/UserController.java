@@ -3,6 +3,7 @@ package com.ChitChat.demo.controller;
 import com.ChitChat.demo.business.abstracts.UserService;
 import com.ChitChat.demo.dto.requests.UserRegisterRequest;
 import com.ChitChat.demo.dto.requests.UserUpdateRequest;
+import com.ChitChat.demo.dto.responses.GetUserResponse;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.User;
 import com.ChitChat.demo.error.AuthenticationException;
@@ -25,9 +26,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/api/v1/users")
-    public ResponseEntity<?> getAllUsers(Pageable page, @RequestParam(name = "pageable",required = false,defaultValue = "true") boolean isPageable, @CurrentUser User user){
+    public ResponseEntity<?> getAllUsers(Pageable page, @RequestParam(name = "pageable",required = false,defaultValue = "true") boolean isPageable,
+                                         @RequestParam(name = "like",required = false) String input,@CurrentUser User user){
+
         if(isPageable){
             return ResponseEntity.ok(userService.getAllUsers(page,user));
+        }
+        if(input != null){
+            return ResponseEntity.ok(userService.getUsersLike(input));
         }
         return ResponseEntity.ok(userService.getAllUsers(user));
     }
@@ -43,5 +49,10 @@ public class UserController {
             throw new AuthenticationException();
         }
         userService.update(userUpdateRequest,id);
+    }
+
+    @GetMapping("/api/v1/users/{id}")
+    public GetUserResponse getUser(@PathVariable long id){
+        return userService.getUser(id);
     }
 }

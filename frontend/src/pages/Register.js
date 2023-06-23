@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import chitChat from "../assets/chitchat.png";
 import { login, register } from '../api/ApiCalls';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import ButtonWithProgress from '../components/ButtonWithProgress';
+import { useApiProgress } from '../shared/ApiProgress';
 
 
 const Register = (props) => {
@@ -17,6 +19,8 @@ const Register = (props) => {
         password:"",
         confirmPassword:""
     });
+
+    const pendingApiCall = useApiProgress("post","http://localhost:8080/api/v1/users",true);
 
     const handleValue = (event) => {
         const {name, value} = event.target;
@@ -83,7 +87,7 @@ const Register = (props) => {
             {errors.confirmPassword && <div class="form-text" style={{color:"red"}}>{errors.confirmPassword}</div>}
           </div>
           <div>
-            <button className='btn btn-primary' onClick={onClickRegister}>Register</button>
+            <ButtonWithProgress className={"btn btn-primary"} onClickMethod={onClickRegister} buttonText={"Register"} pendingApiCall={pendingApiCall} />
           </div>
         </div>
       </div>

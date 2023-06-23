@@ -13,6 +13,8 @@ const ChatRoom = (props) => {
     const {token,user} = props.authState;
     const {username} = user;
     
+    const [sendButtonActive,setSendButtonActive] = useState(true);
+
     const [modalVisible, setModalVisible] = useState(false);
 
     const [userData,setUserData] = useState({
@@ -28,6 +30,7 @@ const ChatRoom = (props) => {
     const [chatId,setChatId] = useState(1);
 
     const [conversationMessages,setConversationMessages] = useState({
+        clickedUsername: "",
         conversationId: 0,
         messages: [],
         exists: true
@@ -170,8 +173,16 @@ const ChatRoom = (props) => {
     
     const onClickUser = async (clickedUsername) => {
         try {
+            if(clickedUsername === username){
+                setConversationMessages({clickedUsername:clickedUsername});
+                setChatWindow(clickedUsername);
+                return;
+            }
             const response = await getPrivateConversationMessages(clickedUsername,token);
-            setConversationMessages(response.data);
+            setConversationMessages({
+                ...response.data,
+                clickedUsername:clickedUsername
+            });
             setChatId(response.data.id);
 
             setNewMessagesCount((previousState) => {
@@ -200,7 +211,7 @@ const ChatRoom = (props) => {
 
     const loadConversationMessages = async (conversationId) => {
         try {
-            const response = await getConversationMessages(conversationId);
+            const response = await getConversationMessages(conversationId,token);
 
             if(response.data.messages.length === 1){
                 loadMessagedUsers();
@@ -240,12 +251,12 @@ const ChatRoom = (props) => {
                 <div className='col-md-5'>
                     <div className='container'>
                         <ChatBox authState={props.authState} window={chatWindow} conversationId={chatId} conversationMessages={conversationMessages} loadConversationMessages={loadConversationMessages} 
-                        onClickDelete={onClickDelete}
+                        onClickDelete={onClickDelete} setSendButtonActive={setSendButtonActive}
                         />
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}}/>
      
-                            <button className='btn btn-success' onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer'}}>Send</button>  
+                            <button className='btn btn-success' disabled={!sendButtonActive} onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer', marginTop:"5px"}}>Send</button>  
                         </div>
                     </div>
                 </div>

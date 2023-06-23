@@ -20,7 +20,7 @@ function App() {
         <Route exact path={["/","/login"]} render={() => <Login onLoginSuccess={setAuthSate}/>}/>
         <Route exact path="/register" render={() => <Register onLoginSuccess={setAuthSate}/>}/>
         {authState.isLoggedIn && <Route path="/chatroom" render={() => <ChatRoom authState={authState}/>}/>}
-        <Route exact path="/user" render={() => <UserPage authState={authState} onLoginSuccess={setAuthSate}/> } />
+        <Route exact path="/profile" render={() => <UserPage authState={authState} onLoginSuccess={setAuthSate}/> } />
         <Redirect to="/" />
       </Switch>
     </Router>

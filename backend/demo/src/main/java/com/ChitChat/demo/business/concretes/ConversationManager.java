@@ -84,7 +84,9 @@ public class ConversationManager implements ConversationService {
                 if(!participant.getUsername().equals(user.getUsername())){
                     GetMessagedUsersResponse response = new GetMessagedUsersResponse();
                     response.setUsername(participant.getUsername());
-                    response.setProfileImage(participant.getProfileImage().getImageData());
+                    if(participant.getProfileImage() != null){
+                        response.setProfileImage(participant.getProfileImage().getImageData());
+                    }
                     responses.add(response);
                 }
             }
