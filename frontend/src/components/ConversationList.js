@@ -3,7 +3,7 @@ import "../css/ChatList.css"
 import publicChatLogo from "../assets/meeting.png"
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { getPublicConversations, searchUsersLike } from '../api/ApiCalls';
+import { getPublicConversations, logout, searchUsersLike } from '../api/ApiCalls';
 import UserList from './UserList';
 import MessagedUserList from './MessagedUserList';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
@@ -44,6 +44,14 @@ const ConversationList = (props) => {
         
     }
 
+    const onClickLogout = async () => {
+        try {
+            await logout(props.authState.token);
+        } catch (error) {
+            
+        }
+    }
+
     return (
         <>
         <div className='container-people'>
@@ -55,7 +63,7 @@ const ConversationList = (props) => {
                         </span>
                         <p style={{ margin: '0', fontSize: '16px' }}>My Profile</p>
                     </Link>
-                    <Link to="/logout" style={{ marginLeft: '160px', marginTop:"5px", textDecoration: 'none' }}>
+                    <Link to="/logout" style={{ marginLeft: '160px', marginTop:"5px", textDecoration: 'none' }} onClick={onClickLogout}>
                         <span className="material-symbols-outlined" style={{ fontSize: '24px', cursor: 'pointer' }}>
                         logout
                         </span>

@@ -15,7 +15,7 @@ const Login = (props) => {
       message:""
     });
 
-    const pendingApiCall = useApiProgress("post","http://localhost:8080/api/v1/auth");
+    const pendingApiCall = useApiProgress("post","/api/v1/auth");
 
     const onClickLogin = async () => {
         const creds = {
@@ -38,6 +38,12 @@ const Login = (props) => {
         }
     }
 
+    const onClickEnter = (event) => {
+      if(event.key === "Enter"){
+        onClickLogin();
+      }
+    }
+    
     return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div>
@@ -48,7 +54,7 @@ const Login = (props) => {
         </div>
         <div style={{ marginBottom: '15px', width: '500px' }}>
           <label className="form-label" style={{fontSize:"2rem",color:"purple"}}>Password</label>
-          <input type="password" className="form-control" placeholder="Password" onChange={(event) => { setPassword(event.target.value); setError({message:""}) }} />
+          <input type="password" className="form-control" placeholder="Password" onChange={(event) => { setPassword(event.target.value); setError({message:""}) }} onKeyDown={onClickEnter}/>
         </div>
         {error.message && 
         <div class="text-white text-center" style={{height:"30px",backgroundColor:"red",margin:'5px',marginLeft:'0px',marginRight:'0px'}}>

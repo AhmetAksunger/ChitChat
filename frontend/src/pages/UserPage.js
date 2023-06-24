@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUser, saveProfileImage, updateUser } from '../api/ApiCalls';
+import { getUser, logout, saveProfileImage, updateUser } from '../api/ApiCalls';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { useApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from '../components/ButtonWithProgress';
@@ -21,7 +21,7 @@ const UserPage = (props) => {
     const [newImage,setNewImage] = useState(defaultImage);
     const [imageAsFile,setImageAsFile] = useState();
 
-    const pendingApiCall = useApiProgress('put',`http://localhost:8080/api/v1/users/${user.id}`,true);
+    const pendingApiCall = useApiProgress('put',`/api/v1/users/${user.id}`,true);
 
     const [errors,setErrors] = useState({
         username:"",
@@ -97,6 +97,7 @@ const UserPage = (props) => {
                     token:"",
                     isLoggedIn: false
                   });
+                await logout(token);
                 props.history.push("/login");
             }
         } catch (error) {
@@ -125,6 +126,7 @@ const UserPage = (props) => {
                 token:"",
                 isLoggedIn: false
               });
+            await logout(token);
             props.history.push("/login");
             
         } catch (error) {

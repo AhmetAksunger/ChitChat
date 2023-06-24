@@ -20,7 +20,7 @@ const Register = (props) => {
         confirmPassword:""
     });
 
-    const pendingApiCall = useApiProgress("post","http://localhost:8080/api/v1/users",true);
+    const pendingApiCall = useApiProgress("post","h/api/v1/users",true);
 
     const handleValue = (event) => {
         const {name, value} = event.target;

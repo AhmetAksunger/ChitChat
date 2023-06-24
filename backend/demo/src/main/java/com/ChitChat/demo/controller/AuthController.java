@@ -5,6 +5,8 @@ import com.ChitChat.demo.business.abstracts.UserService;
 import com.ChitChat.demo.dto.requests.CredentialsRequest;
 import com.ChitChat.demo.dto.requests.UserRegisterRequest;
 import com.ChitChat.demo.dto.responses.AuthResponse;
+import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,4 +26,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(credentialsRequest));
     }
 
+    @PostMapping("/api/v1/logout")
+    public void logout(@RequestHeader(name = "Authorization") String authorization){
+        String token = authorization.substring(7);
+        authService.clearToken(token);
+    }
 }

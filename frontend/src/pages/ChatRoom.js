@@ -233,6 +233,17 @@ const ChatRoom = (props) => {
         setModalVisible(false);
     }
 
+    const onClickEnter = (event) => {
+        if(event.key === "Enter"){
+            if(chatWindow.includes("Public")){
+                sendPublicMessage(chatId);
+            }
+            else{
+                sendPrivateMessage();
+            }
+        }
+    }
+
     return (
         <>
         <div className='container'>
@@ -254,8 +265,7 @@ const ChatRoom = (props) => {
                         onClickDelete={onClickDelete} setSendButtonActive={setSendButtonActive}
                         />
                         <div>
-                            <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}}/>
-     
+                            <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}} onKeyDown={onClickEnter}/>
                             <button className='btn btn-success' disabled={!sendButtonActive} onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer', marginTop:"5px"}}>Send</button>  
                         </div>
                     </div>

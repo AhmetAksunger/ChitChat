@@ -9,4 +9,5 @@ public interface AuthService {
     AuthResponse authenticate(CredentialsRequest credentialsRequest);
     UserDetails getUserDetails(String token);
 
+    void clearToken(String token);
 }

@@ -3,7 +3,6 @@ import '../css/ChatBox.css'
 import { getConversationMessages, getPrivateConversationMessages, startConversationWithUser } from '../api/ApiCalls';
 import { useEffect } from 'react';
 import { useRef } from 'react';
-import Modal from './Modal';
 import { format } from 'timeago.js';
 const ChatBox = (props) => {
 

@@ -1,7 +1,4 @@
 import React from 'react';
-import { getMessagedUsers } from '../api/ApiCalls';
-import { useState } from 'react';
-import { useEffect } from 'react';
 
 const MessagedUserList = (props) => {
 

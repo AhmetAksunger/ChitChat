@@ -72,6 +72,11 @@ public class AuthManager implements AuthService {
         return optionalToken.get().getUser();
     }
 
+    @Override
+    public void clearToken(String token) {
+        tokenRepository.deleteById(token);
+    }
+
     private String generateRandomToken(){
         return UUID.randomUUID().toString().replaceAll("-","");
     }
