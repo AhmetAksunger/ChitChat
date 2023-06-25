@@ -1,0 +1,55 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.4.4
+      with:
+        java-version: 17
+    - run: npm ci
+      working-directory: ./frontend
+    - run: npm run build --if-present
+      working-directory: ./frontend
+    
+    - name: Copy react to string static resources
+      run: |
+        cp -a frontend/build/. backend/demo/src/main/resources/static/
+        
+    - name: Build Spring
+      run: mvn -B package --file pom.xml
+      working-directory: ./backend/demo
+
+    - name: SFTP Deploy
+    # You may pin to the exact commit or the version.
+    # uses: wlixcc/SFTP-Deploy-Action@da88a4dbe95286266bbac3c0b2b8284048d20c8f
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+        username: ${{secrets.USERNAME}}
+        server: ${{secrets.IP}} 
+        ssh_private_key: ${{secrets.SSH}}
+        local_path: ./backend/demo/target/demo-0.0.1-SNAPSHOT.jar
+        remote_path: /home/gitaristsensin
