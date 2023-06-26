@@ -4,8 +4,12 @@ import { getConversationMessages, getPrivateConversationMessages, startConversat
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import { format } from 'timeago.js';
-const ChatBox = (props) => {
+import { useApiProgress } from '../shared/ApiProgress';
+import "../css/Loader.css";
+import { BASE_URL } from '../shared/BaseUrl';
 
+const ChatBox = (props) => {
+    
     const {window,conversationMessages,authState,loadConversationMessages} = props;
 
     const {user , token} = authState;
@@ -17,6 +21,8 @@ const ChatBox = (props) => {
 
     const [hoveredMessageIndex,setHoveredMessageIndex] = useState(null);
 
+    const pendingApiCall = useApiProgress("delete",`${BASE_URL}/api/v1/messages/`,false);
+    
     useEffect(() => {props.setSendButtonActive(true)},[clickedUsername]);
 
     useEffect(() => {
@@ -45,7 +51,7 @@ const ChatBox = (props) => {
       };
     
       //<h5 class="card-title text-center">You have no conversation started with this user</h5>
-    
+
     if(clickedUsername === loggedInUser){
         props.setSendButtonActive(false);
         const base64Image = user.profileImage;
@@ -76,6 +82,19 @@ const ChatBox = (props) => {
                                                     </div>
                                                 </div>
                                             </li>
+                                            {props.selfMessage && 
+                                                <li className="in">
+                                                    <div className="chat-img">
+                                                        <img alt="Avatar" src={imageSource} width='32px' height='48px'/>
+                                                    </div>
+                                                    <div className="chat-body">
+                                                        <div className="chat-message">
+                                                            <strong style={{fontSize: "1.5rem"}}>ChitChat</strong>
+                                                            <p style={{fontSize: "1.5rem"}}>{props.selfMessage}</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
                                         </ul>
                                     </div>
                                 </div>
@@ -160,6 +179,7 @@ const ChatBox = (props) => {
                                                         <div className="chat-message" onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
                                                             <div>
                                                                 {hoveredMessageIndex === index && <span class="material-symbols-outlined " onClick={() => props.onClickDelete(messageEntity)} style={{ cursor:'pointer', width: '8px', height: '6px', marginRight: '10px' }}>delete</span>}
+                                                                {pendingApiCall && <div className="loader"></div>}
                                                                 <strong style={{ fontSize: "1.5rem" , marginLeft:'10px'}}>{messageEntity.user.username}</strong>
                                                             </div>
                                                             <p style={{ fontSize: "1.5rem" }}>{messageEntity.message}</p>

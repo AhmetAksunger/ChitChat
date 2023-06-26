@@ -55,6 +55,7 @@ public class AuthManager implements AuthService {
             AuthResponse response = new AuthResponse();
             response.setToken(token);
             response.setUser(mapperService.forResponse().map(user, UserVM.class));
+            response.setAuthorities(user.getAuthorities());
             return response;
         }else{
             throw new AuthenticationException();

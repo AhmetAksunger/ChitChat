@@ -2,6 +2,7 @@ package com.ChitChat.demo.controller;
 
 import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
+import com.ChitChat.demo.dto.responses.CreateMessageResponse;
 import com.ChitChat.demo.dto.responses.MessageVM;
 import com.ChitChat.demo.entity.Message;
 import com.ChitChat.demo.entity.Token;
@@ -33,14 +34,14 @@ public class ChatController {
     private TokenRepository tokenRepository;
     @MessageMapping("/message") // /app/message
     @SendTo("/chatroom/public")
-    public MessageVM receivePublicMessage(@Payload @Validated CreateMessageRequest createMessageRequest) {
+    public CreateMessageResponse receivePublicMessage(@Payload @Validated CreateMessageRequest createMessageRequest) {
 
         return messageService.save(createMessageRequest, createMessageRequest.getSenderName());
     }
 
     @MessageMapping("/private-message")
-    public MessageVM receivePrivateMessage(@Payload @Validated CreateMessageRequest createMessageRequest){
-        MessageVM message = messageService.save(createMessageRequest,createMessageRequest.getSenderName());
+    public CreateMessageResponse receivePrivateMessage(@Payload @Validated CreateMessageRequest createMessageRequest){
+        CreateMessageResponse message = messageService.save(createMessageRequest,createMessageRequest.getSenderName());
         messagingTemplate.convertAndSendToUser(createMessageRequest.getReceiverName(),"/private",message); // /user/{username}/private
         messagingTemplate.convertAndSendToUser(createMessageRequest.getSenderName(),"/private",message); // /user/{username}/private
 
@@ -52,4 +53,6 @@ public class ChatController {
         System.err.println(user.getUsername());
         messageService.delete(messageId,user);
     }
+
+
 }

@@ -6,6 +6,7 @@ import com.ChitChat.demo.dto.requests.UserUpdateRequest;
 import com.ChitChat.demo.dto.responses.GetUserResponse;
 import com.ChitChat.demo.dto.responses.UserVM;
 import com.ChitChat.demo.entity.User;
+import com.ChitChat.demo.error.AuthenticationException;
 import com.ChitChat.demo.error.PasswordMismatchException;
 import com.ChitChat.demo.error.SamePasswordException;
 import com.ChitChat.demo.error.UsernameAlreadyExistsException;
@@ -130,6 +131,17 @@ public class UserManager implements UserService {
             responses.add(response);
         }
         return responses;
+    }
+
+    @Override
+    public void delete(long id, User loggedInUser) {
+        User user = userRepository.findById(id).orElseThrow();
+
+        if(!loggedInUser.getUsername().equals(user.getUsername())){
+            throw new AuthenticationException();
+        }
+
+        userRepository.delete(user);
     }
 
 

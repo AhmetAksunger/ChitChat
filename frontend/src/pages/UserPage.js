@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getUser, logout, saveProfileImage, updateUser } from '../api/ApiCalls';
+import { deleteUser, getUser, logout, saveProfileImage, updateUser } from '../api/ApiCalls';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { useApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { BASE_URL } from '../shared/BaseUrl';
 
 const UserPage = (props) => {
 
@@ -12,6 +13,7 @@ const UserPage = (props) => {
     const {token,user} = authState;
 
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showDeleteAccountModal,setShowDeleteAccountModal] = useState(false);
 
     const [currentUsername,setCurrentUsername] = useState();
 
@@ -21,7 +23,7 @@ const UserPage = (props) => {
     const [newImage,setNewImage] = useState(defaultImage);
     const [imageAsFile,setImageAsFile] = useState();
 
-    const pendingApiCall = useApiProgress('put',`/api/v1/users/${user.id}`,true);
+    const pendingApiCall = useApiProgress('put',`${BASE_URL}/api/v1/users/${user.id}`,true);
 
     const [errors,setErrors] = useState({
         username:"",
@@ -51,7 +53,6 @@ const UserPage = (props) => {
     const uploadFile = async (file) => {
         const attachment = new FormData();
         attachment.append('file',file);
-        console.log(props.authState.token);
         try {
             const response = await saveProfileImage(attachment,token);            
         } catch (error) {
@@ -126,7 +127,6 @@ const UserPage = (props) => {
                 token:"",
                 isLoggedIn: false
               });
-            await logout(token);
             props.history.push("/login");
             
         } catch (error) {
@@ -149,6 +149,20 @@ const UserPage = (props) => {
         }
     }
 
+    const onClickDelete = async () => {
+        try {
+            await deleteUser(user.id,token);
+            props.onLoginSuccess({
+                user:"",
+                token:"",
+                isLoggedIn: false
+              });
+            props.history.push("/login");
+        } catch (error) {
+            
+        }
+
+    };
 
     return (
         <>
@@ -168,10 +182,26 @@ const UserPage = (props) => {
                 
 
                 <a style={{marginTop:"10px",cursor:"pointer"}} onClick={() => setShowPasswordModal(true)}>Want to change your password?</a>
-                <div className="options" style={{marginTop:"20px"}}>
-                    <ButtonWithProgress onClickMethod={onClickSave} pendingApiCall={pendingApiCall} buttonText={"Save"} className={"btn btn-success"}/>
-                    <Link className='btn btn-danger' to="/chatroom">Cancel</Link>
-                </div>
+                <div className="options" style={{ marginTop: "20px", display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <ButtonWithProgress
+                        onClickMethod={onClickSave}
+                        pendingApiCall={pendingApiCall}
+                        buttonText={"Save"}
+                        className={"btn btn-success"}
+                        />
+                        <Link className='btn btn-danger' to="/chatroom">
+                        Cancel
+                        </Link>
+                    </div>
+                    <button className='btn btn-danger' style={{ marginTop: "10px", display: "flex", alignItems: "center" }} onClick={() => setShowDeleteAccountModal(true)}>
+                        <span class="material-symbols-outlined">
+                            person_remove
+                        </span>
+                        <p style={{ marginLeft: "5px", marginBottom: "0" }}>Delete my account</p>
+                    </button>
+
+                    </div>
             </div>
         </div>
         {showPasswordModal && 
@@ -189,6 +219,18 @@ const UserPage = (props) => {
 
                     <ButtonWithProgress onClickMethod={onClickSavePassword} pendingApiCall={pendingApiCall} buttonText={"Save"} className={"btn btn-success"}/>
                     <button className='btn btn-danger' onClick={() => setShowPasswordModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        {showDeleteAccountModal &&
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <div className="modal" style={{height:"200"}}>
+                    <label style={{ fontSize: '2rem', color: 'purple'}}>Are you sure to delete your account?</label>
+                    <div className='options'>
+                        <button className='btn btn-danger' onClick={onClickDelete}>Yes</button>
+                        <button className='btn btn-success' onClick={() => setShowDeleteAccountModal(false)}>Cancel</button>
                     </div>
                 </div>
             </div>

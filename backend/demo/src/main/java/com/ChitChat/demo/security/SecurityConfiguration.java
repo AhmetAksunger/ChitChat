@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST,"/api/v1/auth").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll()
+                .requestMatchers("/api/v1/messages/delete-public").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/api/v1/**").authenticated()
                 .and()
                 .authorizeHttpRequests()

@@ -5,6 +5,7 @@ import chitChat from "../assets/chitchat.png";
 import "../css/Loader.css";
 import { useApiProgress } from '../shared/ApiProgress';
 import ButtonWithProgress from '../components/ButtonWithProgress';
+import { BASE_URL } from '../shared/BaseUrl';
 
 const Login = (props) => {
     
@@ -15,7 +16,7 @@ const Login = (props) => {
       message:""
     });
 
-    const pendingApiCall = useApiProgress("post","/api/v1/auth");
+    const pendingApiCall = useApiProgress("post",`${BASE_URL}/api/v1/auth`);
 
     const onClickLogin = async () => {
         const creds = {
@@ -27,6 +28,7 @@ const Login = (props) => {
             const authState = {
                 token: response.data.token,
                 user: response.data.user,
+                authorities: response.data.authorities,
                 isLoggedIn: true
             }
             props.onLoginSuccess(authState);

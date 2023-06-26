@@ -4,6 +4,7 @@ import { login, register } from '../api/ApiCalls';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import { useApiProgress } from '../shared/ApiProgress';
+import { BASE_URL } from '../shared/BaseUrl';
 
 
 const Register = (props) => {
@@ -20,7 +21,7 @@ const Register = (props) => {
         confirmPassword:""
     });
 
-    const pendingApiCall = useApiProgress("post","h/api/v1/users",true);
+    const pendingApiCall = useApiProgress("post",`${BASE_URL}/api/v1/users`,true);
 
     const handleValue = (event) => {
         const {name, value} = event.target;
@@ -87,7 +88,7 @@ const Register = (props) => {
             {errors.confirmPassword && <div class="form-text" style={{color:"red"}}>{errors.confirmPassword}</div>}
           </div>
           <div>
-            <ButtonWithProgress className={"btn btn-primary"} onClickMethod={onClickRegister} buttonText={"Register"} pendingApiCall={pendingApiCall} />
+            <ButtonWithProgress className={"btn btn-primary"} onClickMethod={onClickRegister} buttonText={"Register"} pendingApiCall={pendingApiCall} disabled={errors.confirmPassword ||pendingApiCall}/>
           </div>
         </div>
       </div>

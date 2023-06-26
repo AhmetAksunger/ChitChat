@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "/api/v1";
+const baseURL = "http://localhost:8080/api/v1";
 
 export const login = (creds) => {
   return axios.post(`${baseURL}/auth`, creds);
@@ -101,6 +101,15 @@ export const updateUser = (userId, body, token) => {
   };
   return axios.put(`${baseURL}/users/${userId}`, body, config);
 };
+
+export const deleteUser = (userId,token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axios.delete(`${baseURL}/users/${userId}`,config);
+}
 
 export const saveProfileImage = (file, token) => {
   const config = {

@@ -2,6 +2,7 @@ package com.ChitChat.demo.business.concretes;
 
 import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
+import com.ChitChat.demo.dto.responses.CreateMessageResponse;
 import com.ChitChat.demo.dto.responses.MessageVM;
 import com.ChitChat.demo.entity.*;
 import com.ChitChat.demo.error.AuthenticationException;
@@ -11,6 +12,7 @@ import com.ChitChat.demo.repository.MessageRepository;
 import com.ChitChat.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -28,7 +30,7 @@ public class MessageManager implements MessageService {
     private ConversationRepository conversationRepository;
 
     @Override
-    public MessageVM save(CreateMessageRequest createMessageRequest,String senderName) {
+    public CreateMessageResponse save(CreateMessageRequest createMessageRequest, String senderName) {
 
         Conversation conversation = conversationRepository.findById(createMessageRequest.getConversationId()).orElseThrow();
         User sender = userRepository.findByUsername(senderName).orElseThrow();
@@ -39,7 +41,8 @@ public class MessageManager implements MessageService {
         message.setUser(sender);
 
         var messageToBeMapped = messageRepository.save(message);
-        MessageVM response = mapperService.forResponse().map(messageToBeMapped,MessageVM.class);
+        CreateMessageResponse response = mapperService.forResponse().map(messageToBeMapped,CreateMessageResponse.class);
+        response.setUsername(sender.getUsername());
         return response;
     }
 
@@ -54,5 +57,11 @@ public class MessageManager implements MessageService {
         messageRepository.delete(message);
     }
 
+    @Override
+    @Transactional
+    public void deletePublicMessages() {
+        messageRepository.deleteByConversationId(1);
+        messageRepository.deleteByConversationId(2);
+    }
 
 }

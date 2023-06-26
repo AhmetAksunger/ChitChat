@@ -616,3 +616,24 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:108)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-06-26 14:29:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula... (1024)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:29:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula... (1024)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:29:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula... (1024)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:29:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula... (1024)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:31:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Is there a character limit in JSX input? Because when I enter 1024 characters a... (942)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:32:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Is there a character limit in JSX input? Because when I enter 1024 characters a... (628)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]
+2023-06-26 14:33:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "MESSAGE CHARACTER VARYING(255)": "'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula... (1024)"; SQL statement:
+insert into messages (id, conversation_id, message, time_stamp, user_id) values (default, ?, ?, ?, ?) [22001-214]

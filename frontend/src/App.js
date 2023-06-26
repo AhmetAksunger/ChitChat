@@ -5,14 +5,18 @@ import { HashRouter as Router,Switch } from "react-router-dom";
 import { Redirect, Route } from "react-router-dom/cjs/react-router-dom.min";
 import Register from "./pages/Register";
 import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
 
   const [authState,setAuthSate] = useState({
     user:"",
     token:"",
-    isLoggedIn: false
+    isLoggedIn: false,
+    authorities: []
   });
+
+  console.log(authState);
 
   return (
     <Router>
@@ -20,7 +24,8 @@ function App() {
         <Route exact path={["/","/login"]} render={() => <Login onLoginSuccess={setAuthSate}/>}/>
         <Route exact path="/register" render={() => <Register onLoginSuccess={setAuthSate}/>}/>
         {authState.isLoggedIn && <Route path="/chatroom" render={() => <ChatRoom authState={authState}/>}/>}
-        <Route exact path="/profile" render={() => <UserPage authState={authState} onLoginSuccess={setAuthSate}/> } />
+        {authState.isLoggedIn && <Route exact path="/profile" render={() => <UserPage authState={authState} onLoginSuccess={setAuthSate}/> } />}
+        {authState.authorities[0].authority === "ROLE_ADMIN" && <Route path="/admin" render={() => <AdminPage />} />}
         <Redirect to="/" />
       </Switch>
     </Router>

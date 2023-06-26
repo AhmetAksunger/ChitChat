@@ -5,6 +5,7 @@ import ChatBox from '../components/ChatBox';
 import { getConversationMessages, getMessagedUsers, getPrivateConversationMessages } from '../api/ApiCalls';
 import ConversationList from '../components/ConversationList';
 import Modal from '../components/Modal';
+import { BASE_URL } from '../shared/BaseUrl';
 
 var stompClient = null;
 
@@ -26,7 +27,7 @@ const ChatRoom = (props) => {
     const [chatWindow, setChatWindow] = useState(() => {
         return "Public Chat 1";
       });
-
+    
     const [chatId,setChatId] = useState(1);
 
     const [conversationMessages,setConversationMessages] = useState({
@@ -65,7 +66,7 @@ const ChatRoom = (props) => {
     }
 
     const registerUser = () => {
-        let Sock = new SockJS("/ws");
+        let Sock = new SockJS(`${BASE_URL}/ws`);
         stompClient=over(Sock);
         stompClient.connect({},onConnected,onError);
     };
@@ -94,11 +95,11 @@ const ChatRoom = (props) => {
 
     const onPublicMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        const {conversationId,user} = payloadData;
+        const {conversationId,username: responseUsername} = payloadData;
         if(chatWindow === `Public Chat ${conversationId}`){
             loadConversationMessages(conversationId);
         }
-        if(user.username !== username){
+        if(responseUsername !== username){
             setNewMessagesCount((previousState) => {
                 const updatedState = {...previousState};
     
@@ -116,23 +117,23 @@ const ChatRoom = (props) => {
 
     const onPrivateMessageReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        const {conversationId, user} = payloadData;
+        const {conversationId, username: responseUsername} = payloadData;
         
         loadMessagedUsers();
 
-        if(chatWindow === user.username){
+        if(chatWindow === responseUsername){
             loadConversationMessages(conversationId);
-        }else if(user.username === username){
+        }else if(responseUsername === username){
             loadConversationMessages(conversationId);
         }
-        if(user.username !== username){
+        if(responseUsername !== username){
             setNewMessagesCount((previousState) => {
                 const updatedState = {...previousState};
     
-                if (user.username in updatedState) {
-                    updatedState[user.username] += 1;
+                if (responseUsername in updatedState) {
+                    updatedState[responseUsername] += 1;
                   } else {
-                    updatedState[user.username] = 1;
+                    updatedState[responseUsername] = 1;
                   }
     
                   return updatedState;
@@ -244,6 +245,18 @@ const ChatRoom = (props) => {
         }
     }
 
+    const onClickSendMessage = () => {
+        if(chatWindow === username){
+            console.log("a");
+            return;
+        }
+        if(chatWindow.includes("Public")){
+            sendPublicMessage(chatId);
+        }else{
+            sendPrivateMessage();
+        }
+    }
+
     return (
         <>
         <div className='container'>
@@ -266,7 +279,7 @@ const ChatRoom = (props) => {
                         />
                         <div>
                             <input className='form-control' type='text' placeholder='Type message here' onChange={handleMessage} value={userData.message} style={{width:'550px', height:'40px'}} onKeyDown={onClickEnter}/>
-                            <button className='btn btn-success' disabled={!sendButtonActive} onClick={chatWindow.includes("Public") ? ()=> {sendPublicMessage(chatId)} : () => sendPrivateMessage()} style={{cursor: 'pointer', marginTop:"5px"}}>Send</button>  
+                            <button className='btn btn-success' disabled={!sendButtonActive} onClick={onClickSendMessage} style={{cursor: 'pointer', marginTop:"5px"}}>Send</button>  
                         </div>
                     </div>
                 </div>

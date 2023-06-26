@@ -3,6 +3,8 @@ package com.ChitChat.demo.error;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageHandlingException;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

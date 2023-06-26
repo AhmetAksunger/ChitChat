@@ -7,6 +7,8 @@ import { getPublicConversations, logout, searchUsersLike } from '../api/ApiCalls
 import UserList from './UserList';
 import MessagedUserList from './MessagedUserList';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { useApiProgress } from '../shared/ApiProgress';
+import { BASE_URL } from '../shared/BaseUrl';
 
 const ConversationList = (props) => {
 
@@ -15,6 +17,8 @@ const ConversationList = (props) => {
     const [searchedUsers,setSearchedUsers] = useState([]);
 
     const {newMessagesCount} = props;
+
+    const pendingApiCall = useApiProgress("get",`${BASE_URL}/api/v1/users?pageable=false&like`,false);
 
     useEffect(() => {
         loadPublicConversations();
@@ -38,6 +42,7 @@ const ConversationList = (props) => {
         try {
             const response = await searchUsersLike(searchInput,props.authState.token);
             setSearchedUsers(response.data);
+            setSearchInput("");
         } catch (error) {
             
         }
@@ -71,7 +76,12 @@ const ConversationList = (props) => {
                 </div>
                 <div className="search">
                     <p>Search</p>
+                    
+                    {pendingApiCall ? <div className='loader'></div> :
                     <input type="text" placeholder="search" onChange={(event) => setSearchInput(event.target.value)}/>
+                    }
+                    
+                    
                     <span class="material-symbols-outlined" style={{cursor:"pointer"}} onClick={onClickSearch}>
                     search
                     </span>

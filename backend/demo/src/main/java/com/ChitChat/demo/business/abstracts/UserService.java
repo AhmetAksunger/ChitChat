@@ -24,4 +24,6 @@ public interface UserService {
     GetUserResponse getUser(long id);
 
     List<UserVM> getUsersLike(String input);
+
+    void delete(long id, User user);
 }

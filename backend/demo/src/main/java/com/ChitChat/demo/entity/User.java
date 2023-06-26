@@ -26,22 +26,30 @@ public class User implements UserDetails {
 
     private String password;
 
-    private boolean isEnabled = true;
-
     @OneToOne
     private Image profileImage;
 
-    @ManyToMany(mappedBy = "participants")
+    private boolean isAdmin = false;
+
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.REMOVE)
     private List<Conversation> conversations;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Message> messages;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Token> tokens;
+
+    public void setAdmin(){
+        this.isAdmin = true;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList("ROLE_USER");
+        if(!isAdmin){
+            return AuthorityUtils.createAuthorityList("ROLE_USER");
+        }else{
+            return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
+        }
     }
 
     @Override
@@ -66,6 +74,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return true;
     }
 }
