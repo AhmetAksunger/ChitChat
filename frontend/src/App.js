@@ -13,10 +13,8 @@ function App() {
     user:"",
     token:"",
     isLoggedIn: false,
-    authorities: []
+    authorities: [{authority:"ROLE_USER"}]
   });
-
-  console.log(authState);
 
   return (
     <Router>
@@ -25,7 +23,7 @@ function App() {
         <Route exact path="/register" render={() => <Register onLoginSuccess={setAuthSate}/>}/>
         {authState.isLoggedIn && <Route path="/chatroom" render={() => <ChatRoom authState={authState}/>}/>}
         {authState.isLoggedIn && <Route exact path="/profile" render={() => <UserPage authState={authState} onLoginSuccess={setAuthSate}/> } />}
-        {authState.authorities[0].authority === "ROLE_ADMIN" && <Route path="/admin" render={() => <AdminPage />} />}
+        {authState.authorities[0].authority === "ROLE_ADMIN" && <Route path="/admin" render={() => <AdminPage authState={authState}/>} />}
         <Redirect to="/" />
       </Switch>
     </Router>

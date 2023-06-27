@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import { useApiProgress } from '../shared/ApiProgress';
 import { BASE_URL } from '../shared/BaseUrl';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 
 const Register = (props) => {
@@ -53,6 +54,7 @@ const Register = (props) => {
             const authState = {
                 token: loginResponse.data.token,
                 user: loginResponse.data.user,
+                authorities: loginResponse.data.authorities,
                 isLoggedIn: true
             };
             props.onLoginSuccess(authState);
@@ -89,6 +91,7 @@ const Register = (props) => {
           </div>
           <div>
             <ButtonWithProgress className={"btn btn-primary"} onClickMethod={onClickRegister} buttonText={"Register"} pendingApiCall={pendingApiCall} disabled={errors.confirmPassword ||pendingApiCall}/>
+            <Link to="/login" style={{fontSize:"1.7rem"}}>Already have an account? Sign in</Link>
           </div>
         </div>
       </div>

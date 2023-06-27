@@ -19,10 +19,11 @@ public class Image {
 
     private String name;
 
-    @Column(length = 1000000)
+    @Column(length = 5120000)
     private String imageData;
 
-    @OneToOne(mappedBy = "profileImage", cascade = CascadeType.REMOVE)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
     public Image(){
         this.name = UUID.randomUUID().toString();

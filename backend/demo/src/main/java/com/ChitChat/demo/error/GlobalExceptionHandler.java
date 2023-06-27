@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, UsernameAlreadyExistsException.class, InvalidImageFileTypeException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, UsernameAlreadyExistsException.class, InvalidImageFileTypeException.class, ImageSizeExceededException.class})
     public ResponseEntity<ValidationErrorResponse> handleException(HttpServletRequest request,Exception exception){
         ValidationErrorResponse error = new ValidationErrorResponse();
         HashMap<String, String> errorMessages = new HashMap<>();
@@ -45,6 +45,11 @@ public class GlobalExceptionHandler {
 
         if(exception instanceof InvalidImageFileTypeException){
             InvalidImageFileTypeException ex = (InvalidImageFileTypeException) exception;
+            errorMessages.put(ex.getKey(),ex.getErrorMessage());
+        }
+
+        if(exception instanceof ImageSizeExceededException){
+            ImageSizeExceededException ex = (ImageSizeExceededException) exception;
             errorMessages.put(ex.getKey(),ex.getErrorMessage());
         }
 

@@ -23,6 +23,8 @@ const ChatBox = (props) => {
 
     const pendingApiCall = useApiProgress("delete",`${BASE_URL}/api/v1/messages/`,false);
     
+    const pendingApiCallForConv = useApiProgress("post",`${BASE_URL}/api/v1/conversations`,true);
+
     useEffect(() => {props.setSendButtonActive(true)},[clickedUsername]);
 
     useEffect(() => {
@@ -133,7 +135,7 @@ const ChatBox = (props) => {
                                                         <h4>You have no conversation with this user yet</h4>
                                                         <button onClick={onClickStartConv} className="btn btn-success custom-button" style={{marginBottom:'10px', marginRight:'30px'}}>
                                                             <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>add_circle</span>
-                                                            <span style={{ verticalAlign: 'middle' }}>Start a conversation</span>
+                                                            {pendingApiCallForConv ? <div className='loader'></div> : <span style={{ verticalAlign: 'middle' }}>Start a conversation</span>}
                                                         </button>
                                                     </div>
                                                 </div>

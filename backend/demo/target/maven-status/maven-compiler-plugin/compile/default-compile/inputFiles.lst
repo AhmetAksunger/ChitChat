@@ -1,6 +1,7 @@
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\controller\AuthController.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\entity\Message.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\error\ErrorResponse.java
+C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\responses\CreateMessageResponse.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\requests\CredentialsRequest.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\entity\Token.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\repository\TokenRepository.java
@@ -11,6 +12,7 @@ C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\bus
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\error\PasswordMismatchException.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\error\UsernameAlreadyExistsException.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\mapper\ModelMapperManager.java
+C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\controller\AdminController.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\entity\Conversation.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\controller\ImageController.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\security\TokenFilter.java
@@ -18,6 +20,7 @@ C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\DemoApplication.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\business\abstracts\AuthService.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\business\abstracts\ImageService.java
+C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\error\ImageUploadException.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\business\concretes\ConversationManager.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\responses\ConversationVM.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\business\abstracts\ConversationService.java
@@ -27,6 +30,7 @@ C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\requests\UserRegisterRequest.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\responses\GetMessagedUsersResponse.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\dto\responses\GetPublicConversationsResponse.java
+C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\error\ImageSizeExceededException.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\mapper\ModelMapperService.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\repository\ConversationRepository.java
 C:\Users\90538\Desktop\ChitChat\backend\demo\src\main\java\com\ChitChat\demo\websocket\WsConfig.java

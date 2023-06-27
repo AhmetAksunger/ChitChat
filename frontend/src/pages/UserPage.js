@@ -23,8 +23,11 @@ const UserPage = (props) => {
     const [newImage,setNewImage] = useState(defaultImage);
     const [imageAsFile,setImageAsFile] = useState();
 
-    const pendingApiCall = useApiProgress('put',`${BASE_URL}/api/v1/users/${user.id}`,true);
+    const [imageSuccess,setImageSuccess] = useState(false);
 
+    const pendingApiCall = useApiProgress('put',`${BASE_URL}/api/v1/users/${user.id}`,true);
+    const pendingApiCallForImage = useApiProgress('post',`${BASE_URL}/api/v1/images`,true);
+    
     const [errors,setErrors] = useState({
         username:"",
         image:"",
@@ -54,7 +57,8 @@ const UserPage = (props) => {
         const attachment = new FormData();
         attachment.append('file',file);
         try {
-            const response = await saveProfileImage(attachment,token);            
+            const response = await saveProfileImage(attachment,token);
+            setImageSuccess(response.data.success);            
         } catch (error) {
             setErrors((previousState) => {
                 return(
@@ -68,6 +72,12 @@ const UserPage = (props) => {
     }
 
     const onChangeFile = (event) => {
+        setErrors((previousState) => {
+            return {
+                ...previousState,
+                image:""
+            };
+        });
         if(event.target.files.length < 1){
             return;
         }
@@ -96,7 +106,8 @@ const UserPage = (props) => {
                 props.onLoginSuccess({
                     user:"",
                     token:"",
-                    isLoggedIn: false
+                    isLoggedIn: false,
+                    authorities:[""]
                   });
                 await logout(token);
                 props.history.push("/login");
@@ -125,7 +136,8 @@ const UserPage = (props) => {
             props.onLoginSuccess({
                 user:"",
                 token:"",
-                isLoggedIn: false
+                isLoggedIn: false,
+                authorities:[""]
               });
             props.history.push("/login");
             
@@ -155,7 +167,8 @@ const UserPage = (props) => {
             props.onLoginSuccess({
                 user:"",
                 token:"",
-                isLoggedIn: false
+                isLoggedIn: false,
+                authorities:[""]
               });
             props.history.push("/login");
         } catch (error) {
@@ -172,7 +185,7 @@ const UserPage = (props) => {
                 <p className="message">{currentUsername}</p>
       
                 <label style={{ fontSize: '2rem', color: 'purple'}}>New Username</label>
-                <input type="text" className="form-control" onChange={(event) => setNewUsername(event.target.value)} style={{ width: '500px'}} />
+                <input type="text" className="form-control" onChange={(event) => {setNewUsername(event.target.value)}} style={{ width: '500px'}} />
                 {errors.username && <div class="form-text" style={{color:"red"}}>{errors.username}</div>}
 
 
@@ -180,7 +193,8 @@ const UserPage = (props) => {
                 <input type="file" className="form-control" onChange={onChangeFile} style={{ width: '500px'}} />
                 {errors.image && <div class="form-text" style={{color:"red"}}>{errors.image}</div>}
                 
-
+                {pendingApiCallForImage && <p style={{color:"gray"}}>Uploading image...</p>}
+                {imageSuccess && <p style={{color:"gray"}}>Uploaded successfully</p>}
                 <a style={{marginTop:"10px",cursor:"pointer"}} onClick={() => setShowPasswordModal(true)}>Want to change your password?</a>
                 <div className="options" style={{ marginTop: "20px", display: "flex", flexDirection: "column" }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -191,7 +205,7 @@ const UserPage = (props) => {
                         className={"btn btn-success"}
                         />
                         <Link className='btn btn-danger' to="/chatroom">
-                        Cancel
+                        Go Back
                         </Link>
                     </div>
                     <button className='btn btn-danger' style={{ marginTop: "10px", display: "flex", alignItems: "center" }} onClick={() => setShowDeleteAccountModal(true)}>

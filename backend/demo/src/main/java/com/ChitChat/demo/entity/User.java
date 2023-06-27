@@ -26,7 +26,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Image profileImage;
 
     private boolean isAdmin = false;

@@ -92,7 +92,7 @@ public class UserManager implements UserService {
                 throw new SamePasswordException();
             }
 
-
+            System.err.println("in");
             tokenRepository.deleteByUserId(id);
             user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
 

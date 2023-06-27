@@ -1,9 +1,8 @@
 import axios from "axios";
-
-const baseURL = "http://localhost:8080/api/v1";
+import { BASE_URL } from "../shared/BaseUrl";
 
 export const login = (creds) => {
-  return axios.post(`${baseURL}/auth`, creds);
+  return axios.post(`${BASE_URL}/api/v1/auth`, creds);
 };
 
 export const getUsers = (
@@ -18,7 +17,7 @@ export const getUsers = (
     },
   };
   return axios.get(
-    `${baseURL}/users?pageable=${pageable}&page=${page}&size=${size}`,
+    `${BASE_URL}/api/v1/users?pageable=${pageable}&page=${page}&size=${size}`,
     config
   );
 };
@@ -29,7 +28,7 @@ export const getPublicConversations = (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.get(`${baseURL}/conversations/public`, config);
+  return axios.get(`${BASE_URL}/api/v1/conversations/public`, config);
 };
 
 export const getConversationMessages = (conversationId, token) => {
@@ -39,7 +38,7 @@ export const getConversationMessages = (conversationId, token) => {
     },
   };
   return axios.get(
-    `${baseURL}/conversations/${conversationId}/messages`,
+    `${BASE_URL}/api/v1/conversations/${conversationId}/messages`,
     config
   );
 };
@@ -51,7 +50,7 @@ export const getPrivateConversationMessages = (username, token) => {
     },
   };
   return axios.get(
-    `${baseURL}/conversations/participants/${username}/messages`,
+    `${BASE_URL}/api/v1/conversations/participants/${username}/messages`,
     config
   );
 };
@@ -62,7 +61,7 @@ export const startConversationWithUser = (data, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.post(`${baseURL}/conversations`, data, config);
+  return axios.post(`${BASE_URL}/api/v1/conversations`, data, config);
 };
 
 export const getMessagedUsers = (token) => {
@@ -71,7 +70,7 @@ export const getMessagedUsers = (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.get(`${baseURL}/conversations/messaged-participants`, config);
+  return axios.get(`${BASE_URL}/api/v1/conversations/messaged-participants`, config);
 };
 
 export const deleteMessage = (token, messageId) => {
@@ -81,7 +80,7 @@ export const deleteMessage = (token, messageId) => {
     },
   };
 
-  return axios.delete(`${baseURL}/messages/${messageId}`, config);
+  return axios.delete(`${BASE_URL}/api/v1/messages/${messageId}`, config);
 };
 
 export const register = (creds) => {
@@ -90,7 +89,7 @@ export const register = (creds) => {
       "Accept-Language": "en-US",
     },
   };
-  return axios.post(`${baseURL}/users`, creds, config);
+  return axios.post(`${BASE_URL}/api/v1/users`, creds, config);
 };
 
 export const updateUser = (userId, body, token) => {
@@ -99,7 +98,7 @@ export const updateUser = (userId, body, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.put(`${baseURL}/users/${userId}`, body, config);
+  return axios.put(`${BASE_URL}/api/v1/users/${userId}`, body, config);
 };
 
 export const deleteUser = (userId,token) => {
@@ -108,7 +107,7 @@ export const deleteUser = (userId,token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.delete(`${baseURL}/users/${userId}`,config);
+  return axios.delete(`${BASE_URL}/api/v1/users/${userId}`,config);
 }
 
 export const saveProfileImage = (file, token) => {
@@ -118,7 +117,7 @@ export const saveProfileImage = (file, token) => {
     },
   };
 
-  return axios.post(`${baseURL}/images`, file, config);
+  return axios.post(`${BASE_URL}/api/v1/images`, file, config);
 };
 
 export const getUser = (userId, token) => {
@@ -128,7 +127,7 @@ export const getUser = (userId, token) => {
     },
   };
 
-  return axios.get(`${baseURL}/users/${userId}`, config);
+  return axios.get(`${BASE_URL}/api/v1/users/${userId}`, config);
 };
 
 export const searchUsersLike = (input, token) => {
@@ -138,7 +137,7 @@ export const searchUsersLike = (input, token) => {
     },
   };
 
-  return axios.get(`${baseURL}/users?pageable=false&like=${input}`, config);
+  return axios.get(`${BASE_URL}/api/v1/users?pageable=false&like=${input}`, config);
 };
 
 export const logout = (token) => {
@@ -147,5 +146,15 @@ export const logout = (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axios.post(`${baseURL}/logout`, {}, config);
+  return axios.post(`${BASE_URL}/api/v1/logout`, {}, config);
 };
+
+export const resetPublicChats = (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return axios.delete(`${BASE_URL}/api/v1/messages/delete-public`,config);
+}
