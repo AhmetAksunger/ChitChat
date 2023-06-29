@@ -24,4 +24,71 @@ Here're some of the project's best features:
 *   Account Management
 *   Simple Design
 
+<h2>Database Diagram</h2>
+<img src="https://github.com/AhmetAksunger/ChitChat/assets/116587797/449227bc-e71e-4b90-afb3-951caeb0438c.png" />
 
+## API Endpoints
+### Authentication API Endpoints
+|HTTP Method|URL Path|Status Code|Description|
+|:-----:|:-----:|:-----:|:-----:|
+| POST | /api/v1/auth | 200 (OK) | Login |
+| POST | /api/v1/logout | 200 (OK) | Logout |
+### Chat API Endpoints
+| HTTP Method | URL Path                 | Status Code | Description                    |
+| :---------: | :----------------------: | :---------: | :----------------------------: |
+|   WebSocket       | /ws/app/message             | N/A         | Receive public chat messages   |
+|   WebSocket       | /ws/private-message         | N/A         | Receive private chat messages  |
+|   DELETE    | /api/v1/messages/{messageId} | 200 (OK)      | Delete a chat message          |
+### Conversation API Endpoints
+| HTTP Method | URL Path                                   | Status Code | Description                               |
+| :---------: | :----------------------------------------: | :---------: | :---------------------------------------: |
+|   POST      | /api/v1/conversations                      | 201 (Created)         | Create a conversation                     |
+|   GET       | /api/v1/conversations/public               | 200 (OK)         | Get public conversations                  |
+|   GET       | /api/v1/conversations/{conversationId}/messages | 200( OK)      | Get messages of a specific conversation   |
+|   GET       | /api/v1/conversations/participants/{username}/messages | 200 (OK) | Get conversation messages by participants         |
+|   GET       | /api/v1/conversations/messaged-participants | 200 (OK)         | Get users with whom the current user has messaged |
+### User API Endpoints
+| HTTP Method | URL Path             | Status Code | Description               |
+| :---------: | :------------------: | :---------: | :-----------------------: |
+|    GET      | /api/v1/users        | 200 (OK)         | Get all users             |
+|    POST     | /api/v1/users        | 201 (Created)         | Create a new user         |
+|    PUT      | /api/v1/users/{id}   | 200 (OK)         | Update user information   |
+|  DELETE     | /api/v1/users/{id}   | 200 (OK)         | Delete a user             |
+|    GET      | /api/v1/users/{id}   | 200 (OK)         | Get a specific user by ID |
+
+### Image API Endpoints
+| HTTP Method | URL Path            | Status Code | Description             |
+| :---------: | :-----------------: | :---------: | :---------------------: |
+|   POST      | /api/v1/images      | 201 (Created)         | Set profile image       |
+
+### Admin API Endpoğints
+| HTTP Method | URL Path                     | Status Code | Description               |
+| :---------: | :-------------------------- | :---------: | :-----------------------: |
+|  DELETE     | /api/v1/messages/delete-public | 200 (OK)        | Delete public messages    |
+
+<h2>Built With</h2>
+Used technologies are:
+
+* **Java Spring Boot**
+  * Spring Boot Starter Data JPA
+  * Spring Boot Starter Security
+  * Spring Boot Starter Web
+  * Spring WebSocket
+  * Spring Messagging
+  * ModelMapper
+  * H2 Database
+  * Spring Boot Starter Validation
+  * Spring Boot DevTools
+  * Lombok
+
+* **React**
+  * Axios
+  * React
+  * react-dom
+  * react-router-dom
+  * react-scripts
+  * redux
+  * sockjs-client
+  * stompjs
+  * timeago.js
+  * web-vitals
