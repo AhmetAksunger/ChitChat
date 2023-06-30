@@ -4,6 +4,13 @@
 
 <p align="center"><img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&amp;logo=openjdk&amp;logoColor=white" alt="shields"><img src="https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&amp;logo=spring&amp;logoColor=white" alt="shields"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&amp;logo=javascript&amp;logoColor=%23F7DF1E" alt="shields"><img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&amp;logo=react&amp;logoColor=%2361DAFB" alt="shields"><img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&amp;logo=html5&amp;logoColor=white" alt="shields"><img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&amp;logo=css3&amp;logoColor=white" alt="shields"></p>
 
+<h2>🚀 Demo</h2>
+<p>Note: Since I'm using the free package of railway, the app is unfortunately slow.</p>
+https://chitchat-production.up.railway.app/#/
+<h2>▶️ Project Video</h2>
+
+[![ChitChat](https://i.imgur.com/VoythA9.png)](https://youtu.be/StTqXEQ2l-Y?t=35s](https://www.youtube.com/watch?v=_5YxjKiDNJ4) "ChitChat")
+
 <h2>Project Screenshots:</h2>
 <h3>Public Chat</h4>
 <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/116587797/249452462-c3398c5a-2353-467a-9d44-77053aa58ec3.png" />
