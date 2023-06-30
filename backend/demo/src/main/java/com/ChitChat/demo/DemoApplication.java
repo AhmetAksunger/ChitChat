@@ -36,19 +36,22 @@ public class DemoApplication {
 			@Override
 			public void run(String... args) throws Exception {
 
+				/* 10 random users
 				for (int i = 1; i<=10; i++){
 					UserRegisterRequest registerRequest = new UserRegisterRequest();
 					registerRequest.setUsername("user" + i);
 					registerRequest.setPassword("test");
 					userService.save(registerRequest);
-				}
+				}*/
 
+				// 2 public chats (Essential)
 				for (int i = 1; i<=2; i++){
 					Conversation conversation = new Conversation();
 					conversation.setPublic(true);
 					conversationRepository.save(conversation);
 				}
 
+				// 1 Admin
 				User user = new User();
 				user.setUsername("admin");
 				String adminPassword = UUID.randomUUID().toString();
