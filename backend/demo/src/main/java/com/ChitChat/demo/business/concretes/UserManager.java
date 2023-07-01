@@ -28,16 +28,19 @@ import java.util.List;
 @Service
 public class UserManager implements UserService {
 
-    @Autowired
-    private ModelMapperService mapperService;
+    private final ModelMapperService mapperService;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TokenRepository tokenRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserManager(ModelMapperService mapperService, UserRepository userRepository,
+                       TokenRepository tokenRepository, PasswordEncoder passwordEncoder){
+        this.mapperService = mapperService;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     @Override
     public void save(UserRegisterRequest userRegisterRequest) {
 
@@ -46,10 +49,7 @@ public class UserManager implements UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword());
-        User user = new User();
-        user.setUsername(userRegisterRequest.getUsername());
-        user.setPassword(encodedPassword);
-
+        User user = User.builder().username(userRegisterRequest.getUsername()).password(encodedPassword).build();
         userRepository.save(user);
     }
 

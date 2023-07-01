@@ -15,34 +15,38 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@RequestMapping("${api.prefix}/conversations")
 public class ConversationController {
 
-    @Autowired
-    private ConversationService conversationService;
+    private final ConversationService conversationService;
 
-    @PostMapping("/api/v1/conversations")
+    @Autowired
+    public ConversationController(ConversationService conversationService){
+        this.conversationService = conversationService;
+    }
+    @PostMapping()
     public ConversationVM save(@RequestBody CreateConversationRequest createConversationRequest, @CurrentUser User user){
 
         return conversationService.save(createConversationRequest, user);
     }
 
-    @GetMapping("/api/v1/conversations/public")
+    @GetMapping("/public")
     public List<GetPublicConversationsResponse> getPublicConversations(){
         return conversationService.getPublicConversations();
     }
 
-    @GetMapping("/api/v1/conversations/{conversationId}/messages")
+    @GetMapping("/{conversationId}/messages")
     public GetConversationMessagesResponse getConversationMessages(@PathVariable(required = true) long conversationId){
         return conversationService.getConversationMessages(conversationId);
     }
 
-    @GetMapping("/api/v1/conversations/participants/{username}/messages")
+    @GetMapping("/participants/{username}/messages")
     public GetConversationMessagesResponse getConversationByParticipants(@CurrentUser User user, @PathVariable String username){
 
         return conversationService.getConversationByParticipants(user,username);
     }
 
-    @GetMapping("/api/v1/conversations/messaged-participants")
+    @GetMapping("/messaged-participants")
     public List<GetMessagedUsersResponse> getMessagedUsersResponses(@CurrentUser User user){
         return conversationService.getMessagedUsersResponse(user);
     }

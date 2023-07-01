@@ -17,12 +17,17 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@RequestMapping("${api.prefix}/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping("/api/v1/users")
+    @Autowired
+    public UserController(UserService userService){
+        this.userService = userService;
+    }
+
+    @GetMapping()
     public ResponseEntity<?> getAllUsers(Pageable page, @RequestParam(name = "pageable",required = false,defaultValue = "true") boolean isPageable,
                                          @RequestParam(name = "like",required = false) String input,@CurrentUser User user){
 
@@ -35,12 +40,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers(user));
     }
 
-    @PostMapping("/api/v1/users")
+    @PostMapping()
     public void save(@RequestBody @Validated UserRegisterRequest userRegisterRequest){
         userService.save(userRegisterRequest);
     }
 
-    @PutMapping(value = "/api/v1/users/{id}")
+    @PutMapping(value = "/{id}")
     public void update(@RequestBody @Validated UserUpdateRequest userUpdateRequest, @PathVariable long id, @CurrentUser User user){
         if(user.getId() != id){
             throw new AuthenticationException();
@@ -48,12 +53,12 @@ public class UserController {
         userService.update(userUpdateRequest,id);
     }
 
-    @DeleteMapping("api/v1/users/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable long id,@CurrentUser User user){
         userService.delete(id,user);
     }
 
-    @GetMapping("/api/v1/users/{id}")
+    @GetMapping("/{id}")
     public GetUserResponse getUser(@PathVariable long id){
         return userService.getUser(id);
     }

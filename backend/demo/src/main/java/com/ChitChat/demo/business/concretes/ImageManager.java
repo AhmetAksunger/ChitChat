@@ -17,10 +17,15 @@ import java.util.HashMap;
 
 @Service
 public class ImageManager implements ImageService {
+
+    private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private ImageRepository imageRepository;
-    @Autowired
-    private UserRepository userRepository;
+    public ImageManager(ImageRepository imageRepository, UserRepository userRepository){
+        this.imageRepository = imageRepository;
+        this.userRepository = userRepository;
+    }
     @Override
     public HashMap<String,Boolean> setProfileImage(MultipartFile image, User user) {
 
@@ -45,9 +50,7 @@ public class ImageManager implements ImageService {
                     imageRepository.deleteById(userPreviousImageId);
                 }
 
-                Image imageEntity = new Image();
-                imageEntity.setUser(user);
-                imageEntity.setImageData(Base64.getEncoder().encodeToString(image.getBytes()));
+                Image imageEntity = Image.builder().user(user).imageData(Base64.getEncoder().encodeToString(image.getBytes())).build();
                 imageRepository.save(imageEntity);
                 user.setProfileImage(imageEntity);
                 userRepository.save(user);

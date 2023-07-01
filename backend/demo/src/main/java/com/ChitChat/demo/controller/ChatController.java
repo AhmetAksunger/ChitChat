@@ -3,19 +3,13 @@ package com.ChitChat.demo.controller;
 import com.ChitChat.demo.business.abstracts.MessageService;
 import com.ChitChat.demo.dto.requests.CreateMessageRequest;
 import com.ChitChat.demo.dto.responses.CreateMessageResponse;
-import com.ChitChat.demo.dto.responses.MessageVM;
-import com.ChitChat.demo.entity.Message;
-import com.ChitChat.demo.entity.Token;
 import com.ChitChat.demo.entity.User;
-import com.ChitChat.demo.repository.TokenRepository;
 import com.ChitChat.demo.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +18,15 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class ChatController {
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    private final MessageService messageService;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private TokenRepository tokenRepository;
+    public ChatController(SimpMessagingTemplate messagingTemplate, MessageService messageService){
+        this.messagingTemplate = messagingTemplate;
+        this.messageService = messageService;
+    }
     @MessageMapping("/message") // /app/message
     @SendTo("/chatroom/public")
     public CreateMessageResponse receivePublicMessage(@Payload @Validated CreateMessageRequest createMessageRequest) {

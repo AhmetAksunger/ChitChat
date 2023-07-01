@@ -20,13 +20,17 @@ import java.util.List;
 @Service
 public class ConversationManager implements ConversationService {
 
-    @Autowired
-    private ConversationRepository conversationRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final ConversationRepository conversationRepository;
+    private final UserRepository userRepository;
+    private final ModelMapperService mapperService;
 
     @Autowired
-    private ModelMapperService mapperService;
+    public ConversationManager(ConversationRepository conversationRepository, UserRepository userRepository,
+                               ModelMapperService mapperService){
+        this.conversationRepository = conversationRepository;
+        this.userRepository = userRepository;
+        this.mapperService = mapperService;
+    }
     @Override
     public List<GetPublicConversationsResponse> getPublicConversations() {
         List<Conversation> conversations = conversationRepository.findByIsPublicTrue();

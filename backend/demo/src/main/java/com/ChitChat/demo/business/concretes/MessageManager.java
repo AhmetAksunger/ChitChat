@@ -19,26 +19,26 @@ import java.util.Date;
 @Service
 public class MessageManager implements MessageService {
 
-    @Autowired
-    private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
+    private final ModelMapperService mapperService;
+    private final ConversationRepository conversationRepository;
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapperService mapperService;
-    @Autowired
-    private ConversationRepository conversationRepository;
-
+    public MessageManager(MessageRepository messageRepository, UserRepository userRepository,
+                          ModelMapperService mapperService, ConversationRepository conversationRepository){
+        this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
+        this.mapperService = mapperService;
+        this.conversationRepository = conversationRepository;
+    }
     @Override
     public CreateMessageResponse save(CreateMessageRequest createMessageRequest, String senderName) {
 
         Conversation conversation = conversationRepository.findById(createMessageRequest.getConversationId()).orElseThrow();
         User sender = userRepository.findByUsername(senderName).orElseThrow();
-        Message message = new Message();
-        message.setMessage(createMessageRequest.getMessage());
-        message.setTimeStamp(new Date());
-        message.setConversation(conversation);
-        message.setUser(sender);
+        Message message = Message.builder().message(createMessageRequest.getMessage()).timeStamp(new Date())
+                .conversation(conversation).user(sender).build();
 
         var messageToBeMapped = messageRepository.save(message);
         CreateMessageResponse response = mapperService.forResponse().map(messageToBeMapped,CreateMessageResponse.class);

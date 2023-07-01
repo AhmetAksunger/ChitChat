@@ -23,16 +23,24 @@ import java.util.UUID;
 @Service
 public class AuthManager implements AuthService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+    private final ModelMapperService mapperService;
 
     @Autowired
-    private TokenRepository tokenRepository;
+    public AuthManager(
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepository,
+            TokenRepository tokenRepository,
+            ModelMapperService mapperService
+    ) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.mapperService = mapperService;
+    }
 
-    @Autowired
-    private ModelMapperService mapperService;
     @Override
     public AuthResponse authenticate(CredentialsRequest credentialsRequest) {
         Optional<User> optionalUser = userRepository.findByUsername(credentialsRequest.getUsername());
@@ -47,15 +55,11 @@ public class AuthManager implements AuthService {
 
         if(matches){
             String token = generateRandomToken();
-            Token tokenEntity = new Token();
-            tokenEntity.setToken(token);
-            tokenEntity.setUser(user);
+            Token tokenEntity = Token.builder().token(token).user(user).build();
             tokenRepository.save(tokenEntity);
 
-            AuthResponse response = new AuthResponse();
-            response.setToken(token);
-            response.setUser(mapperService.forResponse().map(user, UserVM.class));
-            response.setAuthorities(user.getAuthorities());
+            AuthResponse response = AuthResponse.builder().token(token).user(mapperService.forResponse().map(user, UserVM.class))
+                            .authorities(user.getAuthorities()).build();
             return response;
         }else{
             throw new AuthenticationException();

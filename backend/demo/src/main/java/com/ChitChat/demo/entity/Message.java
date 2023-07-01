@@ -4,6 +4,7 @@ import com.ChitChat.demo.dto.responses.UserVM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "messages")
+@Builder
 public class Message {
 
     @Id

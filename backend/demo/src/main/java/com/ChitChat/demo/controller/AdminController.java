@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class AdminController {
 
-    @Autowired
-    private MessageService messageService;
+    private final MessageService messageService;
 
-    @DeleteMapping("/api/v1/messages/delete-public")
-    public void delete(){
+    @Autowired
+    public AdminController(MessageService messageService){
+        this.messageService = messageService;
+    }
+    @DeleteMapping("${api.prefix}/messages/delete-public")
+    public void delete() {
         messageService.deletePublicMessages();
     }
 }
