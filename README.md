@@ -9,7 +9,7 @@
 https://chitchat-production.up.railway.app/#/
 <h2>▶️ Project Video</h2>
 
-[![ChitChat](https://i.imgur.com/VoythA9.png)](https://youtu.be/StTqXEQ2l-Y?t=35s](https://www.youtube.com/watch?v=_5YxjKiDNJ4) "ChitChat")
+[![ChitChat](https://i.imgur.com/VoythA9.png)](https://www.youtube.com/watch?v=_5YxjKiDNJ4) "ChitChat")
 
 <h2>Project Screenshots:</h2>
 <h3>Public Chat</h4>
